@@ -13,9 +13,9 @@ var request = require('request'),
   bar,
   options = {
     provider: 'google',
-    httpAdapter: 'https', // Default
-    apiKey: config.api_key, //Google Geocode API > Don't use for other stuff this is specifically for the Kita Explorer
-    formatter: null         // 'gpx', 'string', ...
+    httpAdapter: 'https',
+    apiKey: config.api_key,
+    formatter: null 
   },
   geocoder = _geocoder(options)
 
@@ -82,7 +82,7 @@ function parseKitas(){
 
       data.data[ki].phone = $('#lblTelefon').text().trim()
       data.data[ki].email = $('#HLinkEMail').attr('href')
-      if(data.data[ki].email.indexOf('mailto')>=0){
+      if(data.data[ki].email && data.data[ki].email.length > 6 && data.data[ki].email.indexOf('mailto')>=0){
         data.data[ki].email = (data.data[ki].email.split('to:'))[1].trim()
       }
       data.data[ki].webLink = $('#HLinkWeb').attr('href')
@@ -96,11 +96,11 @@ function parseKitas(){
       data.data[ki].languages.forEach( d => { d = d.trim() })
 
       data.data[ki].open = [
-        ($('#lblOeffnungMontag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'),
-        ($('#lblOeffnungDienstag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'),
-        ($('#lblOeffnungMittwoch').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'),
-        ($('#lblOeffnungDonnerstag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'),
-        ($('#lblOeffnungFreitag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-')
+        ($('#lblOeffnungMontag').text().trim().length > 4)?($('#lblOeffnungMontag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0,
+        ($('#lblOeffnungDienstag').text().trim().length > 4)?($('#lblOeffnungDienstag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0,
+        ($('#lblOeffnungMittwoch').text().trim().length > 4)?($('#lblOeffnungMittwoch').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0,
+        ($('#lblOeffnungDonnerstag').text().trim().length > 4)?($('#lblOeffnungDonnerstag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0,
+        ($('#lblOeffnungFreitag').text().trim().length > 4)?($('#lblOeffnungFreitag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0
       ]
 
       var tds = $('#GridViewPlatzstrukturen tbody tr').eq(1).children('td')
@@ -144,7 +144,7 @@ function parseKitas(){
       console.log(error, response)
     }
 
-    geocoder.geocode({address: data.data[ki].address, country: 'Germany', zipcode: data.data[ki].postcode}, function(err, res) {
+    /*geocoder.geocode({address: data.data[ki].address, country: 'Germany', zipcode: data.data[ki].postcode}, function(err, res) {
       if(err){
         console.log(err)
       }else{
@@ -166,7 +166,17 @@ function parseKitas(){
           parseKitas()
         }
       }
-    })
+    })*/
+
+    ki++;
+    progress_bar.update(ki)
+    if(ki >= data.data.length){
+      fs.renameSync('kitas.json', 'archive/'+old.date+'_kitas.json')
+      fs.writeFileSync('kitas.json', JSON.stringify(data), 'utf8')
+      process.exit()
+    }else{
+      parseKitas()
+    }
 
   })
 }

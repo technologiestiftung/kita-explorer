@@ -78,7 +78,7 @@ function parseKitas(){
       data.data[ki].type = $('#lblEinrichtungsart').text().trim()
       data.data[ki].parentType = $('#lblTraegerart').text().trim()
       data.data[ki].mapLink = $('#HLinkStadtplan').attr('href').trim()
-      data.data[ki].name = $('#lblKitaname').attr('href').trim()
+      data.data[ki].name = $('#lblKitaname').text().trim()
 
       data.data[ki].postcode = parseInt((data.data[ki].mapLink.match(/[0-9]*(?=&ADR)/))[0])
 

@@ -11,6 +11,7 @@ var request = require('request'),
   keys = {},
   ki = 0,
   bar,
+  errorCount = 0,
   options = {
     provider: 'google',
     httpAdapter: 'https',
@@ -77,8 +78,9 @@ function parseKitas(){
       data.data[ki].type = $('#lblEinrichtungsart').text().trim()
       data.data[ki].parentType = $('#lblTraegerart').text().trim()
       data.data[ki].mapLink = $('#HLinkStadtplan').attr('href').trim()
+      data.data[ki].name = $('#lblKitaname').attr('href').trim()
 
-      data.data[ki].postcode = data.data[ki].mapLink.match(/[0-9]*(?=&ADR)/)
+      data.data[ki].postcode = parseInt((data.data[ki].mapLink.match(/[0-9]*(?=&ADR)/))[0])
 
       data.data[ki].phone = $('#lblTelefon').text().trim()
       data.data[ki].email = $('#HLinkEMail').attr('href')
@@ -88,12 +90,27 @@ function parseKitas(){
       data.data[ki].webLink = $('#HLinkWeb').attr('href')
       data.data[ki].image = $('#imgKita').attr('src')
       //'https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/kitas/verzeichnis/' + ImageURL
-      data.data[ki].educational = $('#lblPaedSchwerpunkte').text().trim().split(',')
-      data.data[ki].educational.forEach( d => { d = d.trim() })
-      data.data[ki].topics = $('#lblThemSchwerpunkte').text().trim().split(',')
-      data.data[ki].topics.forEach( d => { d = d.trim() })
-      data.data[ki].languages = $('#lblMehrsprachigkeit').text().trim().split(',')
-      data.data[ki].languages.forEach( d => { d = d.trim() })
+
+      if($('#lblPaedSchwerpunkte').text().trim().length===0){
+        data.data[ki].educational = []
+      }else{
+        data.data[ki].educational = $('#lblPaedSchwerpunkte').text().trim().split(',')
+        data.data[ki].educational.forEach( d => { d = d.trim() })
+      }
+
+      if($('#lblThemSchwerpunkte').text().trim().length===0){
+        data.data[ki].topics = []
+      }else{
+        data.data[ki].topics = $('#lblThemSchwerpunkte').text().trim().split(',')
+        data.data[ki].topics.forEach( d => { d = d.trim() })
+      }
+
+      if($('#lblMehrsprachigkeit').text().trim().length===0){
+        data.data[ki].languages = []
+      }else{
+        data.data[ki].languages = $('#lblMehrsprachigkeit').text().trim().split(',')
+        data.data[ki].languages.forEach( d => { d = d.trim() })
+      }
 
       data.data[ki].open = [
         ($('#lblOeffnungMontag').text().trim().length > 4)?($('#lblOeffnungMontag').text().replace(/<b>(.|\n)*<\/b>/gm, "").trim().split(' '))[1].split('-'):0,
@@ -117,67 +134,72 @@ function parseKitas(){
 
       if($('#GridViewFreiPlaetze tbody tr td').length > 1){
         var rows = $('#GridViewFreiPlaetze tbody tr')
-        var fields = rows.eq(1).children('td')
-        data.data[ki].places.push({
-          accept:fields.eq(0).text().trim(),
-          all:fields.eq(1).text().trim(),
-          over:fields.eq(2).text().trim(),
-          under:fields.eq(3).text().trim(),
-          hours:fields.eq(4).text().trim(),
-          from:fields.eq(5).text().trim(),
-          comment:fields.eq(6).text().trim()
-        })
+        for(var i = 1; i<rows.length; i++){
+          var fields = rows.eq(i).children('td')
+          data.data[ki].places.push({
+            accept:fields.eq(0).text().trim(),
+            all:fields.eq(1).text().trim(),
+            over:fields.eq(2).text().trim(),
+            under:fields.eq(3).text().trim(),
+            hours:fields.eq(4).text().trim(),
+            from:fields.eq(5).text().trim(),
+            comment:fields.eq(6).text().trim()
+          })
+        }
       }
 
       data.data[ki].jobs = []
 
       if($('#GridViewStellenangebote tbody tr td').length > 1){
         var rows = $('#GridViewStellenangebote tbody tr')
-        var fields = rows.eq(1).children('td')
-        data.data[ki].jobs.push({
-          name:fields.eq(0).text().trim(),
-          date:fields.eq(1).text().trim()
-        })
+        for(var i = 1; i<rows.length; i++){
+          var fields = rows.eq(i).children('td')
+          data.data[ki].jobs.push({
+            name:fields.eq(0).text().trim(),
+            date:fields.eq(1).text().trim()
+          })
+        }
       }
 
-    }else{
-      console.log(error, response)
-    }
-
-    /*geocoder.geocode({address: data.data[ki].address, country: 'Germany', zipcode: data.data[ki].postcode}, function(err, res) {
-      if(err){
-        console.log(err)
-      }else{
-
-        data.data[ki].geo = {
-          lat: res[0].latitude,
-          lon: res[0].longitude
-        }
-        data.data[ki].streetName = res[0].streetName
-        data.data[ki].streetNumber = res[0].streetNumber
-
-        ki++;
-        progress_bar.update(ki)
-        if(ki >= data.data.length){
-          fs.renameSync('kitas.json', 'archive/'+old.date+'_kitas.json')
-          fs.writeFileSync('kitas.json', JSON.stringify(data), 'utf8')
-          process.exit()
-        }else{
+      geocoder.geocode({address: data.data[ki].address, country: 'Germany', zipcode: data.data[ki].postcode}, function(err, res) {
+        if(err){
+          errorCount++;
+          if(errorCount > 50){
+            console.log('Too many errors')
+            process.exit();
+          }
           parseKitas()
-        }
-      }
-    })*/
+        }else{
 
-    ki++;
-    progress_bar.update(ki)
-    if(ki >= data.data.length){
-      fs.renameSync('kitas.json', 'archive/'+old.date+'_kitas.json')
-      fs.writeFileSync('kitas.json', JSON.stringify(data), 'utf8')
-      process.exit()
+          data.data[ki].geo = {
+            lat: res[0].latitude,
+            lon: res[0].longitude
+          }
+          data.data[ki].streetName = res[0].streetName
+          data.data[ki].streetNumber = res[0].streetNumber
+
+          //fs.writeFileSync('./individual/'+data.data[ki].id+'_kitas.json', JSON.stringify(data.data[ki]), 'utf8')
+
+          ki++
+          progress_bar.update(ki)
+          if(ki >= data.data.length){
+            fs.renameSync('kitas.json', 'archive/'+old.date+'_kitas.json')
+            fs.writeFileSync('kitas.json', JSON.stringify(data), 'utf8')
+            process.exit()
+          }else{
+            parseKitas()
+          }
+        }
+      })
+
     }else{
+      errorCount++;
+      if(errorCount > 50){
+        console.log('Too many errors')
+        process.exit();
+      }
       parseKitas()
     }
-
   })
 }
 

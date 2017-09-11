@@ -1,2 +1,6 @@
 node_modules
 scraper/node_modules
+scraper/archive/*
+config.json
+scraper/kitas.json
+scraper/kitas_keys.json

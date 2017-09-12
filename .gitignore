@@ -5,3 +5,4 @@ config.json
 scraper/kitas.json
 scraper/kitas_keys.json
 scraper/individual/*
+scraper/data/*

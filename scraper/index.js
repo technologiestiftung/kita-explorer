@@ -3,7 +3,7 @@ var request = require('request'),
   _geocoder = require('node-geocoder'),
   _progress = require('cli-progress'),
   progress_bar = new _progress.Bar({}, _progress.Presets.shades_classic),
-  old = require('./kitas.json'),
+  old = require('./data/kitas.json'),
   config = require('./config.json'),
   fs = require('fs'),
   $,
@@ -59,8 +59,8 @@ request.get('https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetr
       keys[id] = data.data.length-1
     })
 
-    fs.renameSync('kitas_keys.json', 'archive/'+old.date+'_kitas_keys.json')
-    fs.writeFileSync('kitas_keys.json', JSON.stringify(keys), 'utf8')
+    fs.renameSync('./data/kitas_keys.json', 'archive/'+old.date+'_kitas_keys.json')
+    fs.writeFileSync('./data/kitas_keys.json', JSON.stringify(keys), 'utf8')
 
     progress_bar.start(data.data.length , 0)
 
@@ -78,7 +78,8 @@ function parseKitas(){
       data.data[ki].type = $('#lblEinrichtungsart').text().trim()
       data.data[ki].parentType = $('#lblTraegerart').text().trim()
       data.data[ki].mapLink = $('#HLinkStadtplan').attr('href').trim()
-      data.data[ki].name = $('#lblKitaname').text().trim()
+      data.data[ki].name = ($('#lblKitaname').text().trim().split('"').join('').split("\n"))[0]
+      data.data[ki].zusatz = ($('#lblKitaname').text().trim().split('"').join('').split("\n"))[1]
 
       data.data[ki].postcode = parseInt((data.data[ki].mapLink.match(/[0-9]*(?=&ADR)/))[0])
 
@@ -183,8 +184,8 @@ function parseKitas(){
           ki++
           progress_bar.update(ki)
           if(ki >= data.data.length){
-            fs.renameSync('kitas.json', 'archive/'+old.date+'_kitas.json')
-            fs.writeFileSync('kitas.json', JSON.stringify(data), 'utf8')
+            fs.renameSync('./data/kitas.json', 'archive/'+old.date+'_kitas.json')
+            fs.writeFileSync('./data/kitas.json', JSON.stringify(data), 'utf8')
             process.exit()
           }else{
             parseKitas()

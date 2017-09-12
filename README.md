@@ -4,11 +4,15 @@ Kindertagesstätten (Kitas) Berlin
 
 ## Scraper
 
+### Kitas
+
 If no search parameters are attached, the following page contains all Kitas from the offical city record
 
 ```
 https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/kitas/verzeichnis/ListeKitas.aspx?aktSuchbegriff=
 ```
+
+#### Structure
 
 Within the document the data is structured as follows (instead of using classes every field has a unique id, yes this means this document has 12770 unique ids and we cannot check for class names and instead need to parse ids):
 
@@ -81,4 +85,34 @@ if(#GridViewStellenangebote tbody tr td.length == 1) > empty
 #GridViewStellenangebote tbody tr:>0 
   td:0 = Position text
   td:1 = Position date
+```
+
+#### Scraping
+
+The data is then scraped through the main script:
+
+```
+node index.js
+```
+
+This will result in a kitas.json (Array of all kitas) and a kitas_keys.json (hash table of ids to array position). The kitas.json also holds a timestamp when the file was created. If an old file already exists, its moved to ./archive/. As the resulting file contains all meta data, a minified version can be crated through:
+
+```
+node minify.js
+```
+
+This will result in a light weight csv and a dictionary for common terms, which are replace in the csv to reduce the file size.
+
+### Address Data
+
+The following downloads all addresses in the city of Berlin and stores them in a geojson file.
+
+```
+ogr2ogr -s_srs EPSG:25833 -t_srs WGS84 -f GeoJSON address.geojson WFS:"http://fbinter.stadt-berlin.de/fb/wfs/geometry/senstadt/re_rbsadressen" re_rbsadressen
+```
+
+Again this is pretty big, so this will be reduced:
+
+```
+minify_address.js
 ```

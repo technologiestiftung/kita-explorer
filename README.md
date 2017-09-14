@@ -116,3 +116,13 @@ Again this is pretty big, so this will be reduced:
 ```
 minify_address.js
 ```
+
+TODO: Add postcode / district name to list, because of duplicate streets across city
+
+
+## Routing
+
+The whole routing runs on OSRM and an OSM extract of Berlin. If you want to run the system locally, I strongly recommend using Docker.
+
+### Local install using Docker
+

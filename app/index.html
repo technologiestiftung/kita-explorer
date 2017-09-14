@@ -1,0 +1,98 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Berlins Kindertagesstätten</title>
+  <meta name="description" content="Berlins Kindertagesstätten">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Contrail+One|Open+Sans:300,700" rel="stylesheet">
+  <link href='css/style.css' rel='stylesheet' />
+</head>
+<body>
+  <div id="header">
+    <h1>TSB:Lab / Berlins Kindertagesstätten</h1>
+  </div>
+  <div id="loading">
+    <div class="outer"><div class="middle"><div class="inner">
+      <div id="loader">
+        <img class="i1" src="images/ani-1@2x.png" />
+        <img class="i2" src="images/ani-2@2x.png" />
+        <img class="i3" src="images/ani-3@2x.png" />
+        <img class="i4" src="images/ani-4@2x.png" />
+      </div>
+    </div></div></div>
+  </div>
+  <div id="welcome">
+    <div class="outer"><div class="middle"><div class="inner">
+      <h2>Wilkommen</h2>
+      <p>Bitte geben Sie Ihre Straße und Hausnummer ein:</p>
+      <form>
+        <input type="text" id="street" name="street" placeholder="Straße..." />
+        <select id="number">
+        </select>
+      </form>
+      <div id="autocomplete"><ul></ul></div>
+    </div>
+  </div>
+  <div id="vis"></div>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript">
+    var streets, address;
+    d3.queue()
+      .defer(d3.csv, "data/address.min.csv")
+      .defer(d3.csv, "data/streets.csv")
+      .await(function(error, file1, file2) {
+        if (error) { console.error(error); 
+        } else {
+          address = file1;
+          streets = file2;
+        }
+        welcome();
+      });
+
+    function welcome(){
+      d3.select('#loading')
+        .transition()
+          .ease(d3.easeCubicIn)
+          .duration(500)
+          .style('opacity',0);
+
+      d3.select('#welcome')
+        .style('opacity',0)
+        .style('display','block')
+        .transition()
+          .ease(d3.easeCubicOut)
+          .delay(500)
+          .duration(500)
+          .style('opacity',1)
+          .style('padding-top','0px')
+          .on('end', function(){
+            d3.select('#street').node().focus();
+          });
+    }
+
+    d3.select('#street').on('input', function(){
+      if(this.value.length > 2){
+        matches = []
+        streets.forEach(function(s,i){
+          if(s.street.indexOf(this.value) > -1){
+            matches.push(i);
+          }
+        });
+        console.log(matches);
+        var li = d3.selectAll('#autocomplete ul li');
+        li.data(matches);
+        li.exit().remove();
+        li.enter().append('li')
+          .text(function(d){ return streets[d].street+'('+streets[d].plz+')'; });
+      }
+    });
+  </script>
+</body>
+</html>

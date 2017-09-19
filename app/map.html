@@ -1,0 +1,244 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Map Test</title>
+  <meta name="description" content="Map Test">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
+  <style type="text/css">
+      body,html{margin:0;padding:0;border:0;width:100%;height:100%;font-family: Helvetica, Arial, sans-serif;}
+      #map{width:100%;height:100%;}
+      #overlay{
+        width:400px;
+        height:100%;
+        position: fixed;
+        left:0;
+        top:0;
+        background-color:rgba(255,255,255,0.5);
+        overflow-y:auto;
+      }
+
+      svg text{
+        
+        font-size:12px;
+      }
+
+      .filter-title{
+        font-size:18px;
+        font-weight: bold;
+        text-transform: capitalize;
+        padding-bottom:10px;
+        display: block;
+        padding-top:20px;
+      }
+
+      .filter-container{
+        margin:0 20px;
+      }
+
+      .filter-container div{
+        overflow: hidden;
+        width:360px;
+      }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="overlay"></div>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript">
+    
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'style.json',
+      center: [13.4244,52.5047],
+      zoom: 10
+    });
+
+    map.fitBounds([[13.0790332437,52.3283651024],[13.7700526861,52.6876624308]],
+      {
+        offset: [200, 0],
+        speed:999
+      });
+
+    var kitas, kitas_dict, kitas_keys = {};
+
+    map.on('load', function(){
+      d3.csv('./data/kitas.csv', function(err,data){
+        kitas = data;
+        var geojson = {type:'FeatureCollection',features:[]};
+        data.forEach(function(d,i){
+          data[i].lon = parseFloat(d.lon);
+          data[i].lat = parseFloat(d.lat);
+          kitas_keys[d.id] = i;
+          geojson.features.push({
+            type:'Feature',
+            properties:{
+              class:'normal'
+            },
+            geometry:{
+              type:'Point',
+              coordinates:[data[i].lon,data[i].lat]
+            }
+          });
+        });
+
+        map.addSource('kitas', { type: 'geojson', data: geojson });
+
+        map.addLayer({
+          "id": "kitas",
+          "type": "circle",
+          "source": "kitas",
+          "paint": {
+            'circle-radius': {
+              'base': 1.75,
+              'stops': [[12, 2], [22, 180]]
+            },
+            'circle-color': {
+              property: 'class',
+              type: 'categorical',
+              stops: [
+                ['normal', '#fbb03b'],
+                ['cl1', '#223b53'],
+                ['cl2', '#e55e5e'],
+                ['cl3', '#3bb2d0'],
+                ['cl4', '#ccc']]
+            }
+          }
+        });
+
+        geojson.features.forEach(function(f){
+          f.properties.class = 'cl'+Math.round(Math.random()*3+1);
+        });
+
+        map.getSource('kitas').setData(geojson);
+
+        d3.json('http://localhost:1717/kitas?lat=52.482121&lon=13.433543', function(err, data){
+          var routes = {type:'FeatureCollection',features:[]},
+            max = 0;
+          for(var i = data.length-1; i>=0; i--){
+            if('routes' in data[i]){
+              if(data[i].routes.car.routes[0].duration > max){
+                max = data[i].routes.car.routes[0].duration;
+              }
+              data[i].routes.car.routes[0].geometry.coordinates.unshift([13.433543,52.482121])
+              data[i].routes.car.routes[0].geometry.coordinates.push([kitas[kitas_keys[data[i].kita_id]].lon,kitas[kitas_keys[data[i].kita_id]].lat])
+              routes.features.push({
+                type:'Feature',
+                properties:{
+                  dist: parseInt(data[i].dist),
+                  duration: data[i].routes.car.routes[0].duration
+                },
+                geometry:data[i].routes.car.routes[0].geometry
+              })
+            }
+          }
+
+          map.addSource('routes', { type: 'geojson', data: routes });
+
+          map.addLayer({
+            "id": "routes",
+            "type": "line",
+            "source": "routes",
+            "paint": {
+              'line-width': 3,
+              'line-opacity': 1,
+              'line-color': {
+                'property':'duration',
+                "colorSpace": "rgb",
+                 "stops": [
+                   [0, 'blue'],
+                  [max, 'red']
+                 ]
+                  }
+            }
+          });
+        });
+
+        /*
+        {
+            'property': 'dist',
+            'stops': [
+            ['0', '#3383c6'],
+            ['2000', '#c63348']]
+        }
+        */
+
+        d3.json('./data/kitas_dict.json', function(err, data){
+          kitas_dict = data;
+          var overlay = d3.select('#overlay');
+          
+          var filter = ['type','languages','topics','educational','parenttype'], //parent
+            filters = {};
+
+          filter.forEach(function(f){
+            filters[f] = [];
+            data[f].forEach(function(ff, ffi){
+              filters[f].push({count:0, id:ffi, name:ff});
+            });
+          });
+
+          kitas.forEach(function(k){
+            filter.forEach(function(f){
+              if(!isNaN(parseInt(k[f]))){
+                filters[f][parseInt(k[f])].count++;
+              }
+            });
+          });
+
+          var lineHeight = 24;
+
+          filter.forEach(function(f){
+            var height = lineHeight*filters[f].length;
+
+            var box = overlay.append('div').attr('class','filter-container');
+            box.append('span')
+              .attr('class', 'filter-title')
+              .text(f);
+
+            var boxHeight = ((height>10*lineHeight)?10*lineHeight:height);
+            var svg = box.append('div')
+              .style('height', (boxHeight)+'px')
+              .append('svg')
+                .attr('width', 360)
+                .attr('height', height);
+
+            var w = d3.scaleLinear().domain([0,d3.max(filters[f], function(d){return d.count;})]).range([0,360]);
+
+            filters[f].sort(function(a,b){
+              return b.count-a.count;
+            });
+
+            var groups = svg.selectAll('g').data(filters[f]).enter().append('g')
+              .attr('transform', function(d,i){
+                return 'translate(0,'+ i*lineHeight +')';
+              });
+
+            groups.append('rect')
+              .attr('height', lineHeight-1)
+              .style('fill', 'rgba(0,0,0,0.3)')
+              .attr('width', function(d,i){return w(d.count);});
+
+            groups.append('text')
+              .text(function(d){ return d.name+' ('+d.count+')'; })
+              .attr('dy', 15)
+              .attr('dx', 5);
+            
+          });
+
+        });
+
+      });
+    });
+
+  </script>
+</body>
+</html>

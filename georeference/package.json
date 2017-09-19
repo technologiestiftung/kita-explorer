@@ -1,5 +1,5 @@
 {
-  "name": "kita-routing",
+  "name": "kita-georeference",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,13 +9,8 @@
   "author": "Sebastian Meier",
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^4.0.2",
     "d3": "^4.10.2",
-    "express": "^4.15.4",
-    "fs": "0.0.1-security",
-    "os": "^0.1.1",
-    "osrm": "^5.12.0",
-    "path": "^0.12.7",
-    "spatialite": "0.0.6",
-    "sqlite3": "^3.1.11"
+    "fs": "0.0.1-security"
   }
 }

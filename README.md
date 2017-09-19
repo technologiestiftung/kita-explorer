@@ -108,7 +108,8 @@ This will result in a light weight csv and a dictionary for common terms, which 
 The following downloads all addresses in the city of Berlin and stores them in a geojson file.
 
 ```
-ogr2ogr -s_srs EPSG:25833 -t_srs WGS84 -f GeoJSON address.geojson WFS:"http://fbinter.stadt-berlin.de/fb/wfs/geometry/senstadt/re_rbsadressen" re_rbsadressen
+ogr2ogr --config OGR_WFS_PAGING_ALLOWED YES --config OGR_WFS_PAGE_SIZE 100000 -s_srs EPSG:25833 -t_srs WGS84 -f GeoJSON address.geojson WFS:"http://fbinter.stadt-berlin.de/fb/wfs/geometry/senstadt/re_rbsadressen" re_rbsadressen
+
 ```
 
 Again this is pretty big, so this will be reduced:
@@ -122,7 +123,17 @@ TODO: Add postcode / district name to list, because of duplicate streets across 
 
 ## Routing
 
-The whole routing runs on OSRM and an OSM extract of Berlin. If you want to run the system locally, I strongly recommend using Docker.
+The whole routing runs on OSRM and an OSM extract of Berlin.
 
-### Local install using Docker
+### Creating the osrm files
 
+I strongly recommend using the docker images provided by osrm, in order to turn osm extracts into osrm ready data sets. See documentation here: https://hub.docker.com/r/osrm/osrm-backend/
+
+### Building the routing service
+
+If you are able to use docker (e.g. server that supports docker or local install) do so. Otherwise my suggestion is to use node v6.x.x and install osrm via npm. Why v6? Mapbox is so kind to provide prebuild  versions, but only for v4 and v6. Using the prebuild versions allows you to avoid a lot of problems. 
+
+
+## Georeferencing
+
+http://wiki.openstreetmap.org/wiki/Nominatim/Development_overview

@@ -9,6 +9,7 @@ html, body{
   border:0; 
   width:100%; 
   height:100%; 
+  font-family: 'Open Sans', sans-serif;
 }
 
 #header{
@@ -46,7 +47,7 @@ h1{
 .outer {
     display: table;
     position: absolute;
-    height: 100%;
+    height: 90%;
     width: 100%;
 }
 
@@ -166,7 +167,7 @@ h1{
 }
 
 #welcome{
-  padding-top:10px;
+  padding-top:20px;
 }
 
 #welcome h2, #welcome p{
@@ -183,7 +184,7 @@ h1{
   font-size:24px;
 }
 
-#welcome form{
+#welcome #form{
   display: block;
   width:300px;
   max-width:100%;
@@ -199,16 +200,74 @@ h1{
   line-height:24px;
   background-color: rgba(0,0,0,0.02);
   outline:none;
+  margin-bottom:10px;
 }
 
-#welcome input{
-  width:66%;
+#welcome input#address{
   float:left;
+  width:72%;
 }
 
 #welcome select{
-  float:right;
+  float:left;
+  margin-left:2%;
+  width:22%;
   height:34px;
-  width:25%;
 }
 
+#welcome input#submit{
+  clear:both;
+  display: block;
+  width:auto;
+  padding:0 20px;
+  margin:0 auto;
+  height:35px;
+  background-color: rgba(0,0,0,0.4);
+  color:#fff;
+  cursor:pointer;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+#welcome input#submit:hover{
+  background-color: rgba(0,0,0,0.55);
+}
+
+#autosuggest{
+  width:100%;
+  clear: both;
+  background-color:rgba(0,0,0,0.2);
+  border-radius:3px;
+  margin-bottom:10px;
+  display: none;
+}
+
+#autosuggest span{
+  display: block;
+  padding-top:15px;
+  margin:0 15px;
+}
+
+#autosuggest ul, #autosuggest li{
+  list-style: none;
+  padding:0;
+  margin:0;
+}
+
+#autosuggest li{
+  margin:5px 15px;
+}
+
+#autosuggest li:first-child{ padding-top:5px; }
+#autosuggest li:last-child{ padding-bottom:15px; }
+
+#autosuggest li a{
+  cursor:pointer;
+}
+
+#autosuggest li a:hover, #autosuggest li.active a{
+  font-weight: 700;
+}

@@ -16,7 +16,7 @@
 </head>
 <body>
   <div id="header">
-    <h1>TSB:Lab / Berlins Kindertagesstätten</h1>
+    <h1>TSB:Lab / Kindertagesstätten</h1>
   </div>
   <div id="loading">
     <div class="outer"><div class="middle"><div class="inner">
@@ -32,26 +32,26 @@
     <div class="outer"><div class="middle"><div class="inner">
       <h2>Wilkommen</h2>
       <p>Bitte geben Sie Ihre Straße und Hausnummer ein:</p>
-      <form>
-        <input type="text" id="street" name="street" placeholder="Straße..." />
-        <select id="number">
-        </select>
-      </form>
-      <div id="autocomplete"><ul></ul></div>
+      <div id="form">
+        <input type="text" id="address" name="address" placeholder="Adresse..." autocomplete="off" />
+        <select id="number" name="number"></select>
+        <div id="autosuggest"><span>Bitte Straße auswählen:</span><ul></ul></div>
+        <input type="button" id="submit" value="Kitas suchen" />
+      </div>
     </div>
   </div>
   <div id="vis"></div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script type="text/javascript">
-    var streets, address;
+    var kitas, kitas_dict;
     d3.queue()
-      .defer(d3.csv, "data/address.min.csv")
-      .defer(d3.csv, "data/streets.csv")
+      .defer(d3.csv, "data/kitas.csv")
+      .defer(d3.json, "data/kitas_dict.json")
       .await(function(error, file1, file2) {
         if (error) { console.error(error); 
         } else {
-          address = file1;
-          streets = file2;
+          kitas = file1;
+          kitas_dict = file2;
         }
         welcome();
       });
@@ -71,26 +71,122 @@
           .delay(500)
           .duration(500)
           .style('opacity',1)
-          .style('padding-top','0px')
+          .style('padding-top','10px')
           .on('end', function(){
-            d3.select('#street').node().focus();
+            d3.select('#address').node().focus();
           });
     }
 
-    d3.select('#street').on('input', function(){
-      if(this.value.length > 2){
-        matches = []
-        streets.forEach(function(s,i){
-          if(s.street.indexOf(this.value) > -1){
-            matches.push(i);
+    var active_selection = 0;
+
+    d3.select('#address').on('keyup', function(){
+      var suggest_length = d3.selectAll('#autosuggest ul li').size();
+      if(suggest_length >= 1 && (d3.event.keyCode == 40 || d3.event.keyCode == 38 || d3.event.keyCode == 13)){
+        if(d3.event.keyCode == 40){
+          if(active_selection<suggest_length){
+            active_selection++;
+          }
+        }else if(d3.event.keyCode == 38){
+          if(active_selection>=1){
+            active_selection--;
+          }
+        }
+        d3.selectAll('#autosuggest ul li').classed('active',false);
+        if(active_selection>0){
+          d3.select('#autosuggest ul li:nth-child('+active_selection+')').classed('active',true);
+        }
+        if(d3.event.keyCode == 13){
+          selectStreet(d3.select('#autosuggest ul li:nth-child('+active_selection+')').datum());
+        }
+      }else{
+        if(this.value.length > 2){
+          d3.selectAll('#number option').remove();
+          d3.json('http://localhost:1818/street?street='+this.value, function(err, data){
+            active_selection = 0;
+            d3.selectAll('#autosuggest ul li').remove();
+            d3.select('#autosuggest').style('display','block');
+            d3.select('#autosuggest ul').selectAll('li')
+              .data(data).enter().append('li').append('a')
+                .html(function(d){ return '&raquo;&nbsp;'+d.street+((parseInt(d.plz)>0)?' '+d.plz:''); })
+                .on('click', function(){
+                  selectStreet(d3.select(this).datum());
+                });
+          });
+        }
+      }
+    });
+
+    function selectStreet(d){
+      var el = document.getElementById('address');
+      el.blur();
+      el.value = d.street;
+      d3.select('#address').attr('data-id', d.id);
+      d3.selectAll('#autosuggest ul li').remove();
+      d3.select('#autosuggest').style('display','none');
+      d3.json('http://localhost:1818/num?street='+d.id, function(err, data){
+        data.forEach(function(d,i){
+          var num_a = d.num.split(''), num = '', letter = '';
+          num_a.forEach(function(n){
+            if(!isNaN(n)){
+              num += n;
+            }else{
+              letter += n;
+            }
+          });
+          d.int = +num;
+          d.letter = letter;
+        });
+        data.sort(function(a,b){
+          if(a.int === b.int){
+            if (a.letter < b.letter) {
+              return -1;
+            }
+            if (a.letter > b.letter) {
+              return 1;
+            }
+            return 0;
+          }else{
+            return a.int - b.int;
           }
         });
-        console.log(matches);
-        var li = d3.selectAll('#autocomplete ul li');
-        li.data(matches);
-        li.exit().remove();
-        li.enter().append('li')
-          .text(function(d){ return streets[d].street+'('+streets[d].plz+')'; });
+        d3.selectAll('#number option').remove();
+        d3.select('#number').selectAll('option').data(data)
+          .enter().append('option')
+            .attr('value', function(d){return d.id;})
+            .text(function(d){ return d.num; });
+      });
+    }
+
+    d3.select('#submit').on('click', function(){
+      //Check if road and number are present
+      var s_id = d3.select('#address').attr('data-id');
+      var select = document.getElementById( "number" );
+      var n_id = false;
+      if(select.selectedIndex > -1){
+        n_id = select.options[ select.selectedIndex ].value;
+      }
+      
+      if(s_id != null && n_id){
+
+        d3.select('#welcome')
+          .transition()
+            .ease(d3.easeCubicIn)
+            .duration(500)
+            .style('opacity',0)
+            .style('padding-top','0px')
+            .on('end', function(){
+              d3.select('#loading')
+                .transition()
+                  .ease(d3.easeCubicOut)
+                  .duration(500)
+                  .style('opacity',1);
+
+              d3.json('http://localhost:1818/geo?num='+n_id, function(err, json){
+                console.log(json.lat, json.lon);
+              });
+            });
+      }else{
+        alert('Bitte Straße und Hausnummer auswählen.')
       }
     });
   </script>

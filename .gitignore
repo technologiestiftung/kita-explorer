@@ -9,3 +9,4 @@ scraper/data/*
 routing/data/*
 app/data/*
 georeference/data/*
+.DS_Store

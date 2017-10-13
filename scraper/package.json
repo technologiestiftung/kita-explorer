@@ -11,6 +11,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "cli-progress": "^1.5.1",
+    "d3": "^4.11.0",
     "fs": "0.0.1-security",
     "node-geocoder": "^3.20.0",
     "request": "^2.81.0"

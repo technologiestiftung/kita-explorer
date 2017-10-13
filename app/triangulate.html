@@ -1,0 +1,266 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Berlins Kindertagesstätten</title>
+  <meta name="description" content="Berlins Kindertagesstätten">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <style type="text/css">
+    
+    text{
+      font-size:10px;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    .polygons{
+      fill:transparent;
+      stroke:rgba(0,0,0,0.5);
+      stroke-width:0.1;
+    }
+
+    .links{
+      fill:transparent;
+      stroke:rgba(0,0,0,0.1);
+      stroke-width:0.1;
+    }
+
+    svg{
+      border:1px solid #000;
+    }
+
+    #vis{
+      width:500px;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="vis"></div>
+  <script src="js/d3.v4.min.js"></script>
+  <script src="js/topojson.v1.min.js"></script>
+  <script src="js/turf.min.js"></script>
+  <script type="text/javascript">
+  
+    var width = 500,
+      height = 340;
+
+    var svg = d3.select("#vis").append("svg")
+      .attr("viewBox", "0 0 "+width+" "+height)
+      .attr("preserveAspectRatio", "xMinYMin meet")
+      .attr("class", "svg-content-responsive");
+
+    var map = svg.append('g'),
+      voro = svg.append('g'),
+      points = svg.append('g');
+
+    var projection = d3.geoMercator()
+      .center([13.35, 52.45])
+      .scale(30000)
+      .translate([width / 2, height / 2 + 80]);
+
+    var data_labels = ['E_E00_01','E_E01_02','E_E02_03','E_E03_05','E_E05_06','E_E'],
+      sum_labels = ['E_E01_02','E_E02_03','E_E03_05','E_E05_06'],
+      years = [2001,2016],
+      data = [], data_keys = {}, data_fkeys = {}, overall,
+      dict = {};
+
+    d3.json('./data/lor_dict.json', function(err, _data){
+      if(err){console.log(err);}
+      dict = _data;
+
+      d3.csv('./data/EWR.csv', function(err, _data){
+        if(err){console.log(err);}
+
+        data = _data;
+        data.forEach(function(d,i){
+          data_keys[d.id] = i;
+        });
+
+        overall = process(dict);
+        drawAreas();
+      });
+    });
+
+    function process(d){
+      var summary = {sum:[]};
+      data_labels.forEach(function(dl){
+        summary[dl]=[];
+      });
+      for(var key in summary){
+        for(var year = years[0]; year <= years[1]; year++){
+          summary[key].push(0);
+        }
+      }
+
+      for(var i in d){
+        var id = data_keys[d[i].id];
+        data_fkeys[d[i].fid] = id;
+        if(id != undefined){
+          data_labels.forEach(function(dl){
+            d[i][dl] = [];
+            for(var year = years[0]; year <= years[1]; year++){
+              d[i][dl].push(+data[id][year+'_'+dl]);
+              summary[dl][(d[i][dl].length-1)] += +data[id][year+'_'+dl];
+            }
+          });
+          d[i]['sum'] = [];
+          for(var year = years[0]; year <= years[1]; year++){
+            var sum = 0;
+            sum_labels.forEach(function(dl){
+              sum += +data[id][year+'_'+dl];
+            });
+            d[i]['sum'].push(sum);
+            summary.sum[(d[i]['sum'].length-1)] += sum;
+          }
+        }
+        var clength = 0;
+        for(var cid in d[i].c){clength++;}
+        if(clength > 0){
+          var cSum = process(d[i].c);
+          for(var key in cSum){
+            d[i][key] = cSum[key];
+            cSum[key].forEach(function(s,si){
+              summary[key][si] += s;
+            });
+          }
+        }
+      }
+      return summary;
+    }
+
+    function drawAreas(){
+      d3.json("./data/lor_topojson/Planungsraum.topojson", function(error, topo) {
+        if (error) return console.error(error);
+
+        var features = topojson.feature(topo, topo.objects.Planungsraum).features;
+
+        var color = d3.scaleLinear().domain([0, d3.max(features, function(d){
+
+          var item = data[data_fkeys[d.properties.s]];
+          var sum = 0;
+          data_labels.forEach(function(dl){
+            if(dl != 'E_E00_01' && dl != 'E_E'){
+              sum += parseInt(item[years[1]+'_'+dl]);
+            }
+          });
+
+          return sum/d.properties.a;
+
+        })]).range(['rgba(255,255,255,1)','rgba(255,0,0,1)']);
+
+        var path = d3.geoPath().projection(projection);
+        
+        map.append("path")
+          .datum(features)
+          .attr("d", path);
+
+        map.selectAll(".zipcode")
+          .data(features)
+          .enter().append("path")
+          .attr("class", function(d) { return "zipcode"; })
+          .style("fill", function(d) {
+            var item = data[data_fkeys[d.properties.s]];
+            var sum = 0;
+            data_labels.forEach(function(dl){
+              if(dl != 'E_E00_01' && dl != 'E_E'){
+                sum += parseInt(item[years[1]+'_'+dl]);
+              }
+            });
+            return color(sum/d.properties.a);
+          })
+          .attr("d", path);
+
+        drawKitas();
+      });
+    }
+
+    var kitas_keys = {}, kitas = [], missing = 0;
+
+    function drawKitas(){
+      var radius = d3.scaleLinear().domain([0,200]).range([0.1,2]);
+
+      var voronoi = d3.voronoi()
+        .extent([[-1, -1], [width + 1, height + 1]]);
+
+      var kita_locations = [];
+
+      d3.csv('./data/kitas.csv', function(err,data){
+        kitas = data;
+        var geojson = {type:'FeatureCollection',features:[]};
+        data.forEach(function(d,i){
+          data[i].all = +d.all;
+          data[i].lon = parseFloat(d.lon);
+          data[i].lat = parseFloat(d.lat);
+          kitas_keys[d.id] = i;
+          geojson.features.push({
+            type:'Feature',
+            properties:{
+              all:d.all
+            },
+            geometry:{
+              type:'Point',
+              coordinates:[data[i].lon,data[i].lat]
+            }
+          });
+
+          var p = projection([data[i].lon,data[i].lat]);
+          kita_locations.push(p);
+
+          if(isNaN(data[i].all)){
+            missing++;
+          }else{
+            points.append('circle')
+              .attr('r',radius(data[i].all))
+              .attr('cx',p[0])
+              .attr('cy',p[1])
+              .style('stroke','transparent')
+              .style('fill', 'black');
+          }
+        });
+
+        console.log(missing);
+
+        var polygon = voro.append("g")
+            .attr("class", "polygons")
+          .selectAll("path")
+          .data(voronoi.polygons(kita_locations))
+          .enter().append("path")
+            .call(redrawPolygon);
+
+        var link = voro.append("g")
+            .attr("class", "links")
+          .selectAll("line")
+          .data(voronoi.links(kita_locations))
+          .enter().append("line")
+            .call(redrawLink);
+      });
+    }
+
+    function redrawLink(link) {
+      link
+        .attr("x1", function(d) { return d.source[0]; })
+        .attr("y1", function(d) { return d.source[1]; })
+        .attr("x2", function(d) { return d.target[0]; })
+        .attr("y2", function(d) { return d.target[1]; });
+    }
+
+    function redrawSite(site) {
+      site
+        .attr("cx", function(d) { return d[0]; })
+        .attr("cy", function(d) { return d[1]; });
+    }
+
+    function redrawPolygon(polygon) {
+      polygon
+        .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; });
+    }
+
+  </script>
+</body>
+</html>

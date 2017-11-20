@@ -30,11 +30,11 @@
     "openmaptiles": {
       "attribution": "<a href='http://openmaptiles.org/''>© OpenMapTiles</a> <a href='http://www.openstreetmap.org/copyright'>© OpenStreetMap</a>",
       "type": "vector",
-      "tiles": ["http://localhost:10060/tiles/berlin/{z}/{x}/{y}.pbf"]
+      "tiles": ["https://tsb.ara.uberspace.de/tsb-tiles/tiles/berlin/{z}/{x}/{y}.pbf"]
     }
   },
-  "sprite": "http://localhost:10060/sprites/positron",
-  "glyphs": "http://localhost:10060/glyphs/{fontstack}/{range}.pbf",
+  "sprite": "https://tsb.ara.uberspace.de/tsb-tiles/sprites/positron",
+  "glyphs": "https://tsb.ara.uberspace.de/tsb-tiles/glyphs/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",

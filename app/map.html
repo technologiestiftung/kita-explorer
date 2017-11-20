@@ -121,7 +121,7 @@
 
         map.getSource('kitas').setData(geojson);
 
-        d3.json('http://localhost:1717/kitas?lat=52.482121&lon=13.433543', function(err, data){
+        d3.json('https://tsb.ara.uberspace.de/tsb-routing/kitas?lat=52.482121&lon=13.433543', function(err, data){
           var routes = {type:'FeatureCollection',features:[]},
             max = 0;
           for(var i = data.length-1; i>=0; i--){

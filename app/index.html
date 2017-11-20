@@ -12,6 +12,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Contrail+One|Open+Sans:300,300i,700" rel="stylesheet">
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
   <link href="./css/logo.css" rel="stylesheet">
   <link href='./css/style.css' rel='stylesheet' />
 </head>
@@ -33,7 +34,7 @@
       </div>
     </div></div></div>
   </div>
-  <div id="welcome">
+  <!--<div id="welcome">
     <div class="outer"><div class="middle"><div class="inner">
       <h2>Wilkommen</h2>
       <p>Bitte geben Sie Ihre Straße und Hausnummer ein:</p>
@@ -44,14 +45,39 @@
         <input type="button" id="submit" value="Kitas suchen" />
       </div>
     </div>
-  </div>
-  <div id="vis"></div>
+  </div>-->
+  <div id="map"></div>
+  <div id="filter"><div class="inner"><div id="filter-container"><strong>Filter:</strong></div><p><img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Jeder Oberpunkt enthält mehrere Filter. Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben. <i>Nur die Top 13 Filter werden angezeigt.</i></p></div></div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
   <script src="./js/logo.min.js"></script>
   <script type="text/javascript">
     var _logo = logo(d3.select('#logo'), 50, 10, 5, false, true, {min:0.1, max:1});
 
-    var kitas, kitas_dict;
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'style.json',
+      center: [13.4244,52.5047],
+      zoom: 10
+    });
+
+    map.fitBounds([[13.0790332437,52.3283651024],[13.7700526861,52.6876624308]],
+      {
+        offset: [0, 50],
+        speed:999
+      });
+
+    var kitas, kitas_dict, kitas_keys = {}, selection = {},
+      labels = {
+        type: 'Art der Einrichtung',
+        languages :'Mehrsprachigkeit',
+        topics: 'Thematische Schwerpunkte',
+        educational:'Pädagogische Schwerpunkte',
+        parentType:'Träger'
+      },
+      filter = ['type','languages','topics','educational','parentType'], //parent;
+      filters = {};
+
     d3.queue()
       .defer(d3.csv, "data/kitas.csv")
       .defer(d3.json, "data/kitas_dict.json")
@@ -61,17 +87,11 @@
           kitas = file1;
           kitas_dict = file2;
         }
-        //welcome();
+        welcome();
       });
 
     function welcome(){
-      d3.select('#loading')
-        .transition()
-          .ease(d3.easeCubicIn)
-          .duration(500)
-          .style('opacity',0);
-
-      d3.select('#welcome')
+      /*d3.select('#welcome')
         .style('opacity',0)
         .style('display','block')
         .transition()
@@ -82,7 +102,224 @@
           .style('padding-top','10px')
           .on('end', function(){
             d3.select('#address').node().focus();
+          });*/
+        processKitas();
+        processFilter();
+    }
+
+    function processKitas(){
+      var geojson = {type:'FeatureCollection',features:[]};
+        kitas.forEach(function(d,i){
+          kitas[i].all = parseInt(d.all);
+          kitas[i].size = Math.pow(parseInt(d.all), 0.2);
+          kitas[i].lon = parseFloat(d.lon);
+          kitas[i].lat = parseFloat(d.lat);
+          filter.forEach(function(f){
+            if(kitas[i][f]=='' || kitas[i][f] == undefined){
+              kitas[i][f] = [];
+            }else{
+              kitas[i][f] = (kitas[i][f].split('|'));
+              kitas[i][f].forEach(function(s){ s = +s; });
+            }
           });
+          kitas_keys[d.id] = i;
+          geojson.features.push({
+            type:'Feature',
+            properties:{
+              class:'normal',
+              size:kitas[i].size
+            },
+            geometry:{
+              type:'Point',
+              coordinates:[kitas[i].lon,kitas[i].lat]
+            }
+          });
+        });
+
+        map.addSource('kitas', { type: 'geojson', data: geojson });
+
+        map.addLayer({
+          "id": "kitas",
+          "type": "circle",
+          "source": "kitas",
+          "paint": {
+            'circle-radius': {
+              property: 'size',
+              'base': 1.75,
+               stops: [
+                 [{zoom: 12, value: 0}, 0],
+                 [{zoom: 12, value: d3.max(kitas, function(d){return d.size;})}, 3],
+                 [{zoom: 22, value: 0}, 0],
+                 [{zoom: 22, value: d3.max(kitas, function(d){return d.size;})}, 300]
+              ]
+            },
+            'circle-color': {
+              property: 'class',
+              type: 'categorical',
+              stops: [
+                ['normal', '#E60433'],
+                ['inactive', '#555555']]
+            }
+          }
+        });
+    }
+
+    function updateKitas(){
+      /*geojson.features.forEach(function(f){
+          f.properties.class = 'cl'+Math.round(Math.random()*3+1);
+        });
+
+        map.getSource('kitas').setData(geojson);*/
+    }
+
+    function processFilter(){
+      var overlay = d3.select('#filter-container');
+          
+      filter.forEach(function(f){
+        filters[f] = [];
+        selection[f] = [];
+        kitas_dict[f].forEach(function(ff, ffi){
+          filters[f].push({count:0, id:ffi, name:ff, type:f});
+        });
+      });
+
+      kitas.forEach(function(k){
+        filter.forEach(function(f){
+          k[f].forEach(function(ff){
+            filters[f][ff].count++;
+          });
+        });
+      });
+
+      var lineHeight = 26, borderRadius = 2.5;
+
+      filter.forEach(function(f){
+        filters[f] = filters[f].filter(function(d){
+          if(d.name != '' && d.name != '(n.v.)'){
+            return true;
+          }
+          return false;
+        });
+
+        var height = lineHeight*filters[f].length;
+
+        var box = overlay.append('div').attr('class','filter-container');
+        var title = box.append('span')
+          .attr('class', 'filter-title')
+          .on('click', function(){
+            var current = d3.select(this.parentNode).select('.svg-containter');
+            if(current.style('display')=='block'){
+              d3.selectAll('.filter-title').classed('active',false);
+              d3.selectAll('.svg-containter').style('display','none');
+            }else{
+              d3.selectAll('.filter-title').classed('active',false);
+              d3.selectAll('.svg-containter').style('display','none');
+              d3.select(this).classed('active',true);
+              current.style('display','block');
+            }
+          });
+
+        title.append('img').attr('src', 'images/icon-'+f+'@2x.png');
+        title.append('span').text(labels[f]);
+
+        var maxLines = 13;
+        var svg = box.append('div')
+          .attr('class','svg-containter')
+          .style('display', 'none')
+          .append('svg')
+            .attr('width', 310)
+            .attr('height', height);
+
+        var w = d3.scaleLinear().domain([0,d3.max(filters[f], function(d){return d.count;})]).range([0,310]);
+
+        filters[f].sort(function(a,b){
+          return b.count-a.count;
+        });
+
+        var groups = svg.selectAll('g').data(filters[f]).enter().append('g')
+          .attr('transform', function(d,i){
+            return 'translate(0,'+ i*lineHeight +')';
+          });
+
+        groups.append('rect')
+          .attr('class','bar')
+          .attr('x',borderRadius)
+          .attr('y', borderRadius)
+          .attr('height', lineHeight-3-2*borderRadius)
+          .attr('width', function(d,i){var tw = w(d.count)-2*borderRadius; return (tw<1)?1:tw; });
+
+        groups.append('text')
+          .text(function(d){ return cleanFilterLabel(d.name)+' ('+d.count+')'; })
+          .attr('dy', 15)
+          .attr('dx', 7);
+
+        groups.append('rect')
+          .style('cursor','pointer')
+          .attr('height', lineHeight-3)
+          .style('fill', 'transparent')
+          .attr('width', 310)
+          .on('mouseover', function(){
+            d3.select(this.parentNode).select('text').style('font-weight','bold');
+          })
+          .on('mouseout', function(){
+            d3.select(this.parentNode).select('text').style('font-weight','normal');
+          })
+          .on('click', function(d){
+
+            if(d3.select(this).classed('active')){
+              d3.select(this).classed('active',false);
+              removeSelection(d);
+            }else{
+              d3.select(this).classed('active',true);
+              addSelection(d);
+            }
+
+          });
+        
+      });
+
+      initDone();
+    }
+
+    function initDone(){
+      d3.select('#loading')
+        .transition()
+          .ease(d3.easeCubicIn)
+          .duration(500)
+          .style('opacity',0);
+
+      d3.select('#filter')
+        .transition()
+          .delay(500)
+          .ease(d3.easeCubicOut)
+          .duration(500)
+          .style('display','block')
+          .style('opacity',1);
+    }
+
+    function addSelection(d){
+
+    }
+
+    function removeSelection(d){
+
+    }
+
+    function cleanFilterLabel(t){
+      if(t.indexOf('deutsch - ') == 0){
+        return t.substr(10,1).toUpperCase() + t.substr(11);
+      }
+      if(t.substr(0,1)=='(' && t.substr(t.length-1,1)==')'){
+        if(t.indexOf('Rahmenvereinbarung')>=0){
+          return 'Private Kita ohne Rahmenvereinbarung';
+        }
+        if(t.indexOf('EKT')>=0){
+          return 'Eltern-Initiativ-Kindertagesstätte';
+        }
+        return t.substr(1,t.length-2);
+      }
+      
+      return t;
     }
 
     var active_selection = 0;

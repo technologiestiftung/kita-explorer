@@ -28,7 +28,7 @@
   "pitch": 0,
   "sources": {
     "openmaptiles": {
-      "attribution": "<a href='http://openmaptiles.org/''>© OpenMapTiles</a> <a href='http://www.openstreetmap.org/copyright'>© OpenStreetMap</a>",
+      "attribution": "<a href='http://openmaptiles.org'>© OpenMapTiles</a> <a href='http://www.openstreetmap.org/copyright'>© OpenStreetMap</a>",
       "type": "vector",
       "tiles": ["https://tsb.ara.uberspace.de/tsb-tiles/tiles/berlin/{z}/{x}/{y}.pbf"]
     }

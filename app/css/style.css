@@ -335,17 +335,103 @@ h1{
   z-index: 2;
 }
 
-#filter{
+#sidebar{
+  width:420px;
+  height:100vh;
+  position: fixed;
+  left:-360px;
+  top:0;
+  z-index: 3;
+  display: none;
   opacity: 0;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow:    0px 0px 10px 0px rgba(0,0,0,0.2);
+  box-shadow:         0px 0px 10px 0px rgba(0,0,0,0.2);
+}
+
+#sidebar-content{
+  float:left;
+  width:360px;
+  height:100vh;
+  background-color:#fff;
+}
+
+#sidemenu{
+  float:left;
+  height:100vh;
+  width:60px;
+  background-color:#3453CC;
+}
+
+#sidemenu ul, #sidemenu ul li{
+  list-style: none;
+  margin:0;
+  padding:0;
+  color:#fff;
+  font-size:14px;
+  text-align: center;
+}
+
+#sidemenu ul li{
+  padding: 10px 0 10px 0;
+  width:60px;
+}
+
+#sidemenu ul li.active,
+#sidemenu ul li:hover{
+  background-color:#fff;
+  color:#000;
+  cursor: pointer;
+}
+
+#sidemenu ul.top{
+  position: absolute;
+  top:50px;
+}
+
+#sidemenu ul.bottom{
+  position: absolute;
+  bottom:5px;
+}
+
+#sidemenu span{
+  display: block;
+  text-align: center;
+}
+
+#sidemenu li img{
+  margin: 0 auto;
+}
+
+#sidemenu li .black{display: none;}
+#sidemenu li .white{display: block;}
+#sidemenu li:hover .black,
+#sidemenu li.active .black{display: block;}
+#sidemenu li:hover .white,
+#sidemenu li.active .white{display: none;}
+
+#reset{
+  float:right;
+  font-size:14px;
+  margin:-22px 20px 0 0;
+  display: none;
+}
+
+#reset:hover{
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#reset img{
+  margin-right:5px;
+}
+
+#filter{
   display: none;
   width:360px;
   height:100vh;
-  position: fixed;
-  left:0;
-  top:0;
-  background-color:rgba(255,255,255,0.9);
+  background-color:rgba(255,255,255,1);
   overflow-y:auto;
-  z-index: 3;
 }
 
 #filter-container{
@@ -382,7 +468,7 @@ h1{
   font-weight: normal;
   padding-bottom:10px;
   display: block;
-  padding-top:20px;
+  padding-top:5px;
 }
 
 .filter-title.active{
@@ -390,7 +476,7 @@ h1{
   background-image:url('../images/close@2x.png');
   background-size:20px 20px;
   background-repeat: no-repeat;
-  background-position: right 22px;
+  background-position: right 7px;
 }
 
 .filter-title:hover{
@@ -406,8 +492,14 @@ h1{
 }
 
 .filter-container{
-  margin:0 20px;
+  margin:10px 20px 0 0;
   width:314px;
+  padding-left:15px;
+  border-left:5px solid #fff;
+}
+
+.filter-container.filter-set{
+  border-left:5px solid #1d3494;
 }
 
 .filter-list-container li svg{

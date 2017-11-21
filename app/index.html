@@ -47,7 +47,52 @@
     </div>
   </div>-->
   <div id="map"></div>
-  <div id="filter"><div class="inner"><div id="filter-container"><strong>Filter:</strong></div><p><img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Jeder Oberpunkt enthält mehrere Filter. Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben.</p></div></div>
+  <div id="sidebar">
+    <div id="sidebar-content">
+      <div id="filter" class="sidebar-content">
+        <div class="inner">
+          <div id="filter-container">
+            <strong>Filter:</strong>
+            <a id="reset"><img src="images/icon-reset@2x.png" width="14" alt="Filter zurücksetzen" />Filter zurücksetzen</a>
+          </div>
+          <p>
+            <img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Jeder Oberpunkt enthält mehrere Filter. Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="sidemenu">
+      <ul class="top">
+        <li data-item="filter">
+          <img src="images/menu-filter-white@2x.png" alt="Filter" width="40" class="white" />
+          <img src="images/menu-filter-black@2x.png" alt="Filter" width="40" class="black" />
+          <span>Filter</span>
+        </li>
+        <li data-item="postcode">
+          <img src="images/menu-postcode-white@2x.png" alt="PLZ" width="40" class="white" />
+          <img src="images/menu-postcode-black@2x.png" alt="PLZ" width="40" class="black" />
+          <span>PLZ</span>
+        </li>
+        <li data-item="list">
+          <img src="images/menu-list-white@2x.png" alt="Liste" width="40" class="white" />
+          <img src="images/menu-list-black@2x.png" alt="Liste" width="40" class="black" />
+          <span>Liste</span>
+        </li>
+      </ul>
+      <ul class="bottom">
+        <li data-item="info">
+          <img src="images/menu-info-white@2x.png" alt="Info" width="40" class="white" />
+          <img src="images/menu-info-black@2x.png" alt="Info" width="40" class="black" />
+          <span>Info</span>
+        </li>
+        <li data-item="legal">
+          <img src="images/menu-legal-white@2x.png" alt="Legal" width="40" class="white" />
+          <img src="images/menu-legal-black@2x.png" alt="Legal" width="40" class="black" />
+          <span>Legal</span>
+        </li>
+      </ul>
+    </div>
+  </div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
   <script src="./js/logo.min.js"></script>
@@ -169,9 +214,40 @@
             }
           }
         });
+
+        map.on('click', 'kitas', function (e) {
+          new mapboxgl.Popup()
+              .setLngLat(e.lngLat)
+              .setHTML(JSON.parse(e.features[0].properties.data).name)
+              .addTo(map);
+        });
+
+        map.on('mouseenter', 'kitas', function () {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'kitas', function () {
+            map.getCanvas().style.cursor = '';
+        });
     }
 
     function updateKitas(){
+      var filtersFound = false;
+      for(var s in selection){
+        if(selection[s].length > 0){
+          filtersFound = true;
+          filterElements[s].box.classed('filter-set', true);
+        }else{
+          filterElements[s].box.classed('filter-set', false);
+        }
+      }
+
+      if(filtersFound){
+        d3.select('#reset').style('display','block');
+      }else{
+        d3.select('#reset').style('display','none');
+      }
+
       geojson.features.forEach(function(d,i){
         var show = true;
 
@@ -209,12 +285,9 @@
         });
       });
 
-      var set = 0, noset = 0;
-
       //Update filters based on reset kitas
       geojson.features.forEach(function(k){
         if(k.properties.class == 'normal'){
-          set++;
           filter.forEach(function(f){
             k.properties.data[f].forEach(function(ff){
               if(filterKeys[f][ff] in filters[f]){
@@ -222,14 +295,18 @@
               }
             });
           });
-        }else{
-          noset++;
         }
       });
 
       //Update Display
       filter.forEach(function(f){
-        filterElements[f].groups.data(filters[f]);
+        filterElements[f].groups.data(filters[f]).style('opacity', function(d){
+          if(d.count > 0){
+            return 1;
+          }else{
+            return 0.2;
+          }
+        });
 
         filterElements[f].counts.transition()
           .tween("text", function(d) {
@@ -244,13 +321,21 @@
     }
 
     function processFilter(){
+      d3.select('#reset').on('click', function(){
+        for(var s in selection){
+          selection[s] = [];
+        }
+        d3.selectAll('.filter-list-container li').classed('active',false);
+        updateKitas();
+      });
+
       var overlay = d3.select('#filter-container');
           
       filter.forEach(function(f){
         filters[f] = [];
         selection[f] = [];
         filterKeys[f] = {};
-        filterElements[f] = {titles:null, groups:null, counts:null, bars:null};
+        filterElements[f] = {titles:null, groups:null, counts:null, bars:null, box:null};
         kitas_dict[f].forEach(function(ff, ffi){
           filters[f].push({count:0, all:0, id:ffi, name:ff, type:f});
         });
@@ -278,6 +363,8 @@
         var height = lineHeight*filters[f].length;
 
         var box = overlay.append('div').attr('class','filter-container');
+        filterElements[f].box = box;
+
         var title = box.append('span')
           .attr('class', 'filter-title')
           .on('click', function(){
@@ -362,13 +449,29 @@
           .duration(500)
           .style('opacity',0);
 
-      d3.select('#filter')
+      d3.select('#sidebar')
         .transition()
           .delay(500)
           .ease(d3.easeCubicOut)
           .duration(500)
           .style('display','block')
           .style('opacity',1);
+
+      d3.selectAll('#sidemenu li').datum(function(){
+        return d3.select(this).attr('data-item');
+      }).on('click', function(d){
+        d3.selectAll('#sidemenu li').classed('active',false);
+        d3.select(this).classed('active',true);
+        
+        d3.selectAll('.sidebar-content').style('display','none');
+        d3.select('#'+d).style('display','block');
+        
+        d3.select('#sidebar').transition()
+          .delay(1)
+          .ease(d3.easeCubicInOut)
+          .duration(500)
+          .style('left','0px');
+      });
     }
 
     function addSelection(d){

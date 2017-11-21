@@ -426,7 +426,7 @@ h1{
   margin-right:5px;
 }
 
-#filter{
+.sidebar-content{
   display: none;
   width:360px;
   height:100vh;
@@ -436,6 +436,7 @@ h1{
 
 #filter-container{
   margin-top:70px;
+  width:355px;
 }
 
 #filter p{
@@ -573,4 +574,56 @@ ul.filter-list-container li{
   stroke-width:2px;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+#list .inner{
+  padding-top:120px;
+}
+
+#list input{
+  display: block;
+  width:295px;
+  margin:0 20px;
+  font-size:18px;
+  padding:5px 10px;
+  border-radius:5px;
+  -webkit-appearance: none; 
+  -moz-appearance: none; 
+  border:1px solid #999;
+}
+
+#list ul, #list ul li{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+#list ul li{
+  padding:10px 0;
+}
+
+#list li:nth-child(even){background-color:rgba(0,0,0,0); }
+#list li:nth-child(odd){ background-color:rgba(0,0,0,0.05); }
+
+#list span{
+  display: block;
+  padding: 0 10px;
+}
+
+#list .type{
+  font-size: 10px;
+}
+
+#list .name{
+  font-size: 16px; 
+  font-weight:700;
+}
+
+#list .address{
+  font-size: 12px;
+}
+
+#search{
+  position: fixed;
+  top:70px;
 }

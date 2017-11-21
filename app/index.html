@@ -49,6 +49,19 @@
   <div id="map"></div>
   <div id="sidebar">
     <div id="sidebar-content">
+      <div id="details" class="sidebar-content">
+        <h2></h2>
+
+      </div>
+      <div id="list" class="sidebar-content">
+        <div class="inner">
+          <div id="search">
+            <input type="text" placeholder="Suche..." />
+          </div>
+          <ul>
+          </ul>
+        </div>
+      </div>
       <div id="filter" class="sidebar-content">
         <div class="inner">
           <div id="filter-container">
@@ -120,6 +133,7 @@
         educational:'Pädagogische Schwerpunkte',
         parentType:'Träger'
       },
+      detailShow = false,
       geojson = {},
       filterElements = {},
       filterKeys = {},
@@ -163,6 +177,17 @@
           kitas[i].size = Math.pow(parseInt(d.all), 0.2);
           kitas[i].lon = parseFloat(d.lon);
           kitas[i].lat = parseFloat(d.lat);
+
+          var pre = ['AWO Kita', 'AWO ', 'AWO-Kita', 'BOOT-KITA', 'Evangelische Kita ', 'EKG - ', 'EKT - ', 'FRÖBEL Kindergarten ', 'Humanistische Kita ', 'IB-Kita, ', 'Kindergarten ', 'Kita - ', 'Kita ', 'Kindertagesstätte ', 'Kita der Ev. Kirchengem. ', 'Kita der Kath. Kirchengem. ', 'Kinderladen ', 'Kita/', 'Ev. Kita ', 'Ev.Kita ', '- ', '-'];
+          pre.forEach(function(p){
+            if(kitas[i].name.substr(0, p.length) == p){
+              kitas[i].name = kitas[i].name.substr(p.length, kitas[i].name.length);
+            }
+          });
+
+          kitas[i].name = kitas[i].name.trim();
+          kitas[i].name = kitas[i].name.substr(0,1).toUpperCase() + kitas[i].name.substr(1,kitas[i].name.length);
+
           filter.forEach(function(f){
             if(kitas[i][f]=='' || kitas[i][f] == undefined){
               kitas[i][f] = [];
@@ -173,6 +198,9 @@
               });
             }
           });
+
+          kitas[i].fulltext = kitas[i].address + ' ' + kitas[i].district + ' ' + kitas[i].plz + ' ' + kitas[i].name + ' ' + kitas[i].parent;
+
           kitas_keys[d.id] = i;
           geojson.features.push({
             type:'Feature',
@@ -202,7 +230,7 @@
                  [{zoom: 2, value: 0}, 0],
                  [{zoom: 2, value: d3.max(kitas, function(d){return d.size;})}, 3],
                  [{zoom: 22, value: 0}, 0],
-                 [{zoom: 22, value: d3.max(kitas, function(d){return d.size;})}, 30]
+                 [{zoom: 22, value: d3.max(kitas, function(d){return d.size;})}, 500]
               ]
             },
             'circle-color': {
@@ -229,6 +257,33 @@
         map.on('mouseleave', 'kitas', function () {
             map.getCanvas().style.cursor = '';
         });
+
+        geojson.features = geojson.features.sort(function(a,b){
+          if (a.properties.data.name < b.properties.data.name) {
+            return -1;
+          }
+          if (a.properties.data.name > b.properties.data.name) {
+            return 1;
+          }
+          return 0;
+        });
+
+        var li = d3.select('#list ul').selectAll('li').data(geojson.features).enter().append('li').style('display',function(d,i){
+          if(i>10){
+            return 'none';
+          }
+          return 'block';
+        });
+
+        li.append('span').attr('class', 'type')
+          .text(function(d){return kitas_dict.type[d.properties.data.type]+' der '+kitas_dict.parent[d.properties.data.parent];});
+
+        li.append('span').attr('class', 'name')
+          .text(function(d){return d.properties.data.name;});
+
+        li.append('span').attr('class', 'address')
+          .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
+
     }
 
     function updateKitas(){
@@ -318,6 +373,16 @@
         filterElements[f].bars.transition()
           .attr('x2', function(d,i){ return scales[f](d.count); });
       });
+
+      d3.select('#list ul').selectAll('li').data(geojson.features)
+        .style('display', function(d,i){ 
+          if(!filtersFound && i>10){
+            return 'none';
+          }else if(!filtersFound){
+            return 'block';
+          }
+          return (d.properties.class == 'normal')?'block':'none'; 
+        });
     }
 
     function processFilter(){
@@ -460,17 +525,27 @@
       d3.selectAll('#sidemenu li').datum(function(){
         return d3.select(this).attr('data-item');
       }).on('click', function(d){
-        d3.selectAll('#sidemenu li').classed('active',false);
-        d3.select(this).classed('active',true);
-        
-        d3.selectAll('.sidebar-content').style('display','none');
-        d3.select('#'+d).style('display','block');
-        
-        d3.select('#sidebar').transition()
-          .delay(1)
-          .ease(d3.easeCubicInOut)
-          .duration(500)
-          .style('left','0px');
+        if(d3.select(this).classed('active')&&!detailShow){
+          d3.selectAll('#sidemenu li').classed('active',false);
+          d3.select('#sidebar').transition()
+            .delay(1)
+            .ease(d3.easeCubicInOut)
+            .duration(500)
+            .style('left','-360px');
+        }else{
+
+          d3.selectAll('#sidemenu li').classed('active',false);
+          d3.select(this).classed('active',true);
+          
+          d3.selectAll('.sidebar-content').style('display','none');
+          d3.select('#'+d).style('display','block');
+          
+          d3.select('#sidebar').transition()
+            .delay(1)
+            .ease(d3.easeCubicInOut)
+            .duration(500)
+            .style('left','0px');
+        }
       });
     }
 

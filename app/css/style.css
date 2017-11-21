@@ -95,7 +95,7 @@ h1{
   display: none;
 }
 
-.outer {
+.loading .outer {
     display: table;
     position: absolute;
     height: 90%;
@@ -103,13 +103,13 @@ h1{
     pointer-events: none;
 }
 
-.middle {
+.loading .middle {
     display: table-cell;
     vertical-align: middle;
     pointer-events: none;
 }
 
-.inner {
+.loading .inner {
     margin-left: auto;
     margin-right: auto; 
     width: 100%;
@@ -391,7 +391,7 @@ h1{
 
 #sidemenu ul.bottom{
   position: absolute;
-  bottom:5px;
+  bottom:0px;
 }
 
 #sidemenu span{
@@ -626,4 +626,74 @@ ul.filter-list-container li{
 #search{
   position: fixed;
   top:70px;
+}
+
+#details .inner{
+  padding-top:80px;
+}
+
+#details{
+  font-size:14px;
+  width:320px;
+  margin:0 20px;
+}
+
+#detail-close{
+  float:right;
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin-top:-13px;
+  background-size:20px 20px;
+  background-repeat: no-repeat;
+  background-image:url('../images/close@2x.png');
+}
+
+#detail-close:hover{
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+#details a{
+  color:#000;
+  text-decoration: underline;
+}
+
+#details h2{
+  margin:0;
+  padding:0 0 10px 0;
+  font-size:18px;
+  line-height: 23px;
+  font-weight:bold;
+}
+
+#detail-meta{
+  padding-top:40px;
+  font-size:10px;
+  color:#555;
+}
+
+#detail-meta a{
+  color:#555;
+  text-decoration: none;
+}
+
+#details table, #details tr, #details td, #details th, #details tbody, #details thead{
+  text-align:left;
+  padding:0;
+  margin:0;
+  border:none;
+}
+
+#details td, #details th{
+  padding-right:5px;
+}
+
+#details ul li{
+  padding-bottom:5px;
+}
+
+#details ul{
+  list-style-type: circle;
+  padding:0 0 0 20px;
 }

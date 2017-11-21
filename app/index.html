@@ -24,7 +24,7 @@
       <a href="#">Ideation &amp; Protoyping Lab&nbsp;<span class="arrow">&#8614;</span></a>
     </div>
   </div>
-  <div id="loading">
+  <div class="loading">
     <div class="outer"><div class="middle"><div class="inner">
       <div id="loader">
         <img class="i1" src="images/ani-1@2x.png" />
@@ -50,8 +50,105 @@
   <div id="sidebar">
     <div id="sidebar-content">
       <div id="details" class="sidebar-content">
-        <h2></h2>
+        <div class="inner">
+          <div class="loading">
+            <div class="outer"><div class="middle"><div class="inner">
+              <div id="loader">
+                <img class="i1" src="images/ani-1@2x.png" />
+                <img class="i2" src="images/ani-2@2x.png" />
+                <img class="i3" src="images/ani-3@2x.png" />
+                <img class="i4" src="images/ani-4@2x.png" />
+              </div>
+            </div></div></div>
+          </div>
+          <div id="detail-content">
+            <span id="detail-type"></span>
+            <a id="detail-close"></a>
+            <h2 id="detail-name"></h2>
+            <span id="detail-parent"></span>
+            <span id="detail-parentType"></span>
 
+            <p id="detail-location">
+              <span id="detail-address"></span><br />
+              <span id="detail-postcode"></span> Berlin (<span id="detail-district"></span>)
+            </p>
+
+            <p id="detail-contact">
+                <span id="detail-phone"></span><br />
+                <a id="detail-email" href=""></a><br />
+            </p>
+
+            <h3 id="detail-educational-head">Pädagogische Schwerpunkte</h3>
+            <ul id="detail-educational">
+            </ul>
+
+            <h3 id="detail-topics-head">Thematische Schwerpunkte</h3>
+            <ul id="detail-topics">
+            </ul>
+
+            <h3 id="detail-languages-head">Mehrsprachigkeit</h3>
+            <ul id="detail-languages">
+            </ul>
+
+            <h3 class="detail-open">Öffnungszeiten</h3>
+            <table class="detail-open" cellpadding="0" cellspacing="0" border="0">
+              <thead>
+                <tr>
+                  <th>Mo.</th>
+                  <th>Di.</th>
+                  <th>Mi.</th>
+                  <th>Do.</th>
+                  <th>Fr.</th>
+                  <th>Sa.</th>
+                  <th>So.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="detail-open-0"></td>
+                  <td id="detail-open-1"></td>
+                  <td id="detail-open-2"></td>
+                  <td id="detail-open-3"></td>
+                  <td id="detail-open-4"></td>
+                  <td id="detail-open-5"></td>
+                  <td id="detail-open-6"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 id="detail-structure-head">Plätze</h3>
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+                <tr id="detail-structure-overall-row">
+                  <th>Plätze insgesamt:</th>
+                  <td id="detail-structure-overall"></td>
+                </tr>
+                <tr id="detail-structure-under-row">
+                  <th>unter 3 Jahren:</th>
+                  <td id="detail-structure-under"></td>
+                </tr>
+                <tr id="detail-structure-over-row">
+                  <th>über 3 Jahren:</th>
+                  <td id="detail-structure-over"></td>
+                </tr>
+                <tr id="detail-structure-min-row">
+                  <th>frühestes Aufnahmealter in Monaten:</th>
+                  <td id="detail-structure-min"></td>
+                </tr>
+                <tr id="detail-structure-mix-row">
+                  <th>Altersmischung:</th>
+                  <td id="detail-structure-mix"></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div id="detail-meta">
+              ID: <span id="detail-id"></span> NUM:<span id="detail-num"></span><br />
+              <a id="detail-link" href="">Auf Berlin.de einsehen &raquo;</a><br />
+              <a id="detail-mapLink" href="">Auf Berlin.de-Stadtplan anschauen &raquo;</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="list" class="sidebar-content">
         <div class="inner">
@@ -136,6 +233,7 @@
       detailShow = false,
       geojson = {},
       filterElements = {},
+      circleLayer = null,
       filterKeys = {},
       scales = {},
       filter = ['type','languages','topics','educational','parentType'], //parent;
@@ -177,6 +275,7 @@
           kitas[i].size = Math.pow(parseInt(d.all), 0.2);
           kitas[i].lon = parseFloat(d.lon);
           kitas[i].lat = parseFloat(d.lat);
+          kitas[i].oname = kitas[i].name
 
           var pre = ['AWO Kita', 'AWO ', 'AWO-Kita', 'BOOT-KITA', 'Evangelische Kita ', 'EKG - ', 'EKT - ', 'FRÖBEL Kindergarten ', 'Humanistische Kita ', 'IB-Kita, ', 'Kindergarten ', 'Kita - ', 'Kita ', 'Kindertagesstätte ', 'Kita der Ev. Kirchengem. ', 'Kita der Kath. Kirchengem. ', 'Kinderladen ', 'Kita/', 'Ev. Kita ', 'Ev.Kita ', '- ', '-'];
           pre.forEach(function(p){
@@ -218,11 +317,27 @@
 
         map.addSource('kitas', { type: 'geojson', data: geojson });
 
-        map.addLayer({
+        circleLayer = map.addLayer({
           "id": "kitas",
           "type": "circle",
           "source": "kitas",
           "paint": {
+            'circle-stroke-color': {
+              property: 'class',
+              type: 'categorical',
+              stops: [
+                ['normal', 'transparent'],
+                ['focussed', '#E60433'],
+                ['inactive', 'transparent']]
+            },
+            'circle-stroke-width': {
+              property: 'class',
+              type: 'categorical',
+              stops: [
+                ['normal', 0],
+                ['focussed', 5],
+                ['inactive', 0]]
+            },
             'circle-radius': {
               property: 'size',
               'base': 1.75,
@@ -238,16 +353,89 @@
               type: 'categorical',
               stops: [
                 ['normal', '#E60433'],
+                ['focussed', '#E60433'],
                 ['inactive', '#999999']]
             }
           }
         });
 
         map.on('click', 'kitas', function (e) {
-          new mapboxgl.Popup()
-              .setLngLat(e.lngLat)
-              .setHTML(JSON.parse(e.features[0].properties.data).name)
-              .addTo(map);
+          var d = JSON.parse(e.features[0].properties.data);
+          detailShow = true;
+          d3.select('#details .loading').style('display', 'block');
+          d3.select('#detail-content').style('display', 'none');
+
+          d3.selectAll('#sidemenu li').classed('active',false);
+          d3.selectAll('.sidebar-content').style('display','none');
+          d3.select('#details').style('display','block');
+          
+          d3.select('#sidebar').transition()
+            .delay(1)
+            .ease(d3.easeCubicInOut)
+            .duration(500)
+            .style('left','0px');
+
+          d3.json('./data/individual/' + d.id + '_kitas.json', function(err, data){
+            d3.select('#detail-name').text(d.oname);
+            d3.select('#detail-postcode').text(data.postcode.join(','));
+
+            data.emailLink = 'mailto:'+data.email;
+            (['link','id','num','parent','address','district','type','parentType','mapLink','phone','email','emailLink']).forEach(function(l){
+              if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
+                d3.select('#detail-'+l).attr('href', data[l]);
+              }else{
+                d3.select('#detail-'+l).text(data[l]);
+              }
+            });
+
+            (['educational','topics','languages']).forEach(function(l){
+              while(data[l][0]==""){
+                data[l].splice(0,1);
+              }
+              if(data[l].length == 0){
+                d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','none');
+              }else{
+                d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','block');
+                d3.selectAll('#detail-' + l + ' li').remove();
+                d3.select('#detail-' + l).selectAll('li').data(data[l]).enter().append('li')
+                  .text(function(d){
+                    return d.trim();
+                  });
+              }
+            });
+
+            var noStructure = true;
+            for(var label in data.structure){
+              if(data.structure[label] == undefined || data.structure[label] == ''){
+                d3.select('#detail-structure-'+label+'-row').style('display','none');
+              }else{
+                noStructure = false;
+                d3.select('#detail-structure-'+label+'-row').style('display','table-row');
+                d3.select('#detail-structure-'+label).text(data.structure[label]);
+              }
+            }
+            if(noStructure){
+              d3.select('#detail-structure-head').style('display','none');
+            }
+
+            var noOpen = true;
+            d3.selectAll('.detail-open').style('display','block');
+            data.open.forEach(function(o,i){
+              if(data.open[i][0] != undefined){
+                noOpen = false;
+                d3.select('#detail-open-'+i).text(data.open[i][0] + '-' + data.open[i][1]);
+              }else{
+                d3.select('#detail-open-'+i).text('');
+              }
+            });
+            if(noOpen){
+              d3.selectAll('.detail-open').style('display','none');
+            }
+
+            d3.select('#details .loading').style('display', 'none');
+            d3.select('#detail-content').style('display', 'block');
+          });
+
         });
 
         map.on('mouseenter', 'kitas', function () {
@@ -284,6 +472,20 @@
         li.append('span').attr('class', 'address')
           .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
 
+        d3.select('#detail-close').on('click', function(){
+          console.log('click');
+          if(d3.selectAll('#sidemenu li.active').size()==0){
+            d3.select('#sidebar').transition()
+              .delay(1)
+              .ease(d3.easeCubicInOut)
+              .duration(500)
+              .style('left','-360px');
+          }else{
+            d3.select('#details').style('display','none');
+            detailShow = false;
+          }
+        });
+
     }
 
     function updateKitas(){
@@ -303,6 +505,8 @@
         d3.select('#reset').style('display','none');
       }
 
+      var found = 0;
+
       geojson.features.forEach(function(d,i){
         var show = true;
 
@@ -315,20 +519,33 @@
         }
         
         if(show){
-          geojson.features[i].properties.class = 'normal';
+          if(filtersFound){
+            found++;
+            geojson.features[i].properties.class = 'focussed';
+          }else{
+            found++;
+            geojson.features[i].properties.class = 'normal';
+          }
         }else{
           geojson.features[i].properties.class = 'inactive';
         }
       });
 
+      map.setPaintProperty('kitas', 'circle-stroke-width', (found<10)?10/found+5:5);
+
       geojson.features.sort(function(a,b){
-        if (a.properties.class < b.properties.class) {
-          return -1;
-        }
-        if (a.properties.class > b.properties.class) {
+        var ac = a.properties.class,
+          bc = b.properties.class;
+
+        if(ac == bc){
+          return 0;
+        }else if(ac == 'focussed'){
           return 1;
-        }
-        return 0;
+        }else if(bc == 'focussed'){
+          return -1;
+        }        
+        
+        return 0;  
       });
 
       map.getSource('kitas').setData(geojson);
@@ -342,7 +559,7 @@
 
       //Update filters based on reset kitas
       geojson.features.forEach(function(k){
-        if(k.properties.class == 'normal'){
+        if(k.properties.class == 'normal' || k.properties.class == 'focussed'){
           filter.forEach(function(f){
             k.properties.data[f].forEach(function(ff){
               if(filterKeys[f][ff] in filters[f]){
@@ -381,7 +598,7 @@
           }else if(!filtersFound){
             return 'block';
           }
-          return (d.properties.class == 'normal')?'block':'none'; 
+          return (d.properties.class == 'normal' || d.properties.class == 'focussed')?'block':'none';
         });
     }
 
@@ -533,6 +750,7 @@
             .duration(500)
             .style('left','-360px');
         }else{
+          detailShow = false;
 
           d3.selectAll('#sidemenu li').classed('active',false);
           d3.select(this).classed('active',true);

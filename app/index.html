@@ -379,6 +379,8 @@
             d3.select('#detail-name').text(d.oname);
             d3.select('#detail-postcode').text(data.postcode.join(','));
 
+            data.link = 'https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/kitas/verzeichnis/'+data.link;
+
             data.emailLink = 'mailto:'+data.email;
             (['link','id','num','parent','address','district','type','parentType','mapLink','phone','email','emailLink']).forEach(function(l){
               if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
@@ -405,6 +407,7 @@
             });
 
             var noStructure = true;
+            d3.select('#detail-structure-head').style('display','block');
             for(var label in data.structure){
               if(data.structure[label] == undefined || data.structure[label] == ''){
                 d3.select('#detail-structure-'+label+'-row').style('display','none');
@@ -473,7 +476,6 @@
           .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
 
         d3.select('#detail-close').on('click', function(){
-          console.log('click');
           if(d3.selectAll('#sidemenu li.active').size()==0){
             d3.select('#sidebar').transition()
               .delay(1)

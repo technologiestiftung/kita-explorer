@@ -634,6 +634,9 @@ ul.filter-list-container li{
 
 #details{
   font-size:14px;
+}
+
+#details .inner{
   width:320px;
   margin:0 20px;
 }

@@ -12,6 +12,10 @@ html, body{
   font-family: 'Open Sans', sans-serif;
 }
 
+*{
+  outline: none;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 3px;
@@ -45,13 +49,16 @@ html, body{
 
 #logo{
   float:left;
-  margin-top:-40px;
+  margin-top:2px;
+  margin-right:10px;
   margin-left:10px;
 }
 
-#logo line{
-  stroke-width:4px;
+#logo img{
+  width:60px;
+  height: auto;
 }
+
 
 h1{
   float:left;
@@ -335,18 +342,49 @@ h1{
   z-index: 2;
 }
 
+.marker {
+  background-image: url('../images/marker_complete@2x.png');
+  background-size: 41px 51px;
+  width: 41px;
+  height: 51px;
+  cursor: pointer;
+}
+
+/*--- SIDEBAR ---*/
+
 #sidebar{
-  width:420px;
+  width:100%;
   height:100vh;
   position: fixed;
-  left:-360px;
-  top:0;
+  margin-top:-50px;
+  left:0;
+  top:100vh;
   z-index: 3;
   display: none;
   opacity: 0;
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
   -moz-box-shadow:    0px 0px 10px 0px rgba(0,0,0,0.2);
   box-shadow:         0px 0px 10px 0px rgba(0,0,0,0.2);
+  transition-timing-function: ease-in-out;
+  transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+#sidebar.active{
+  top:50px;
+}
+
+@media (min-width: 768px) {
+  #sidebar{
+    margin-top:0;
+    width:420px;
+    top:0;
+    left:-360px;
+  }
+
+  #sidebar.active{
+    top:0;
+    left:0;
+  }
 }
 
 #sidebar-content{
@@ -439,24 +477,33 @@ h1{
   width:355px;
 }
 
-#filter p{
+#postcode-container{
+  margin-top:70px;
+}
+
+#filter p, #postcode p{
   font-size:14px;
   display: block;
   margin:20px;
 }
 
-#filter p img{
+#postcode p.error{
+  color:red;
+  font-weight:bold;
+}
+
+#filter p img, #postcode p img{
   float:left;
   margin-right:10px;
   width:24px;
   height:36px;
 }
 
-#filter .inner{
+#filter .inner, #postcode .inner{
   pointer-events: all;
 }
 
-#filter strong{
+#filter strong, #postcode strong{
   font-size:18px;
   font-weight: bold;
   display: block;
@@ -473,7 +520,6 @@ h1{
 }
 
 .filter-title.active{
-  font-weight:bold;
   background-image:url('../images/close@2x.png');
   background-size:20px 20px;
   background-repeat: no-repeat;
@@ -490,6 +536,19 @@ h1{
   margin-right:7px;
   float:left;
   margin-top:3px;
+}
+
+.filter-title span img{
+  float:none;
+  margin-top:0;
+  height:18px;
+  margin-left:2px;
+  margin-right:0;
+  display: none;
+}
+
+.filter-container.filter-set .filter-title span img{
+  display: inline-block;
 }
 
 .filter-container{
@@ -580,7 +639,7 @@ ul.filter-list-container li{
   padding-top:120px;
 }
 
-#list input{
+#list input, #postcode input{
   display: block;
   width:295px;
   margin:0 20px;
@@ -590,6 +649,10 @@ ul.filter-list-container li{
   -webkit-appearance: none; 
   -moz-appearance: none; 
   border:1px solid #999;
+}
+
+#postcode input{
+  margin-top:20px;
 }
 
 #list ul, #list ul li{
@@ -672,6 +735,7 @@ ul.filter-list-container li{
 
 #detail-meta{
   padding-top:40px;
+  padding-bottom:40px;
   font-size:10px;
   color:#555;
 }

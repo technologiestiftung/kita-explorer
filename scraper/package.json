@@ -9,6 +9,7 @@
   "author": "Sebastian Meier @sebmeier",
   "license": "GPL-3.0",
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "cheerio": "^1.0.0-rc.2",
     "cli-progress": "^1.5.1",
     "d3": "^4.11.0",

@@ -18,7 +18,7 @@
 </head>
 <body>
   <div id="header">
-    <div id="logo"></div>
+    <div id="logo"><img src="images/logo-tsb.svg" alt="Technologiestiftung Berlin" /></div>
     <h1>KITA-Suche</h1>
     <div id="exit">
       <a href="#">Ideation &amp; Protoyping Lab&nbsp;<span class="arrow">&#8614;</span></a>
@@ -159,6 +159,18 @@
           </ul>
         </div>
       </div>
+      <div id="postcode" class="sidebar-content">
+        <div class="inner">
+          <div id="postcode-container">
+            <strong>Postleitzahlsuche:</strong>
+            <input type="text" placeholder="Postleitzahl" id="postcode-input" />
+            <p id="postcode-error"></p>
+            <p>
+              <img src="images/touch@2x.png" alt="Finden Sie die Kitas in einem bestimmten Postleitzahlgebiet." />Finden Sie die Kitas in einem bestimmten Postleitzahlgebiet.
+            </p>
+          </div>
+        </div>
+      </div>
       <div id="filter" class="sidebar-content">
         <div class="inner">
           <div id="filter-container">
@@ -183,6 +195,11 @@
           <img src="images/menu-postcode-black@2x.png" alt="PLZ" width="40" class="black" />
           <span>PLZ</span>
         </li>
+        <li data-item="locate">
+          <img src="images/menu-dist-white@2x.png" alt="Umkreissuche" width="40" class="white" />
+          <img src="images/menu-dist-black@2x.png" alt="Umkreissuche" width="40" class="black" />
+          <span>Umkreis</span>
+        </li>
         <li data-item="list">
           <img src="images/menu-list-white@2x.png" alt="Liste" width="40" class="white" />
           <img src="images/menu-list-black@2x.png" alt="Liste" width="40" class="black" />
@@ -205,9 +222,7 @@
   </div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
-  <script src="./js/logo.min.js"></script>
   <script type="text/javascript">
-    var _logo = logo(d3.select('#logo'), 50, 10, 5, false, true, {min:0.1, max:1});
 
     var map = new mapboxgl.Map({
       container: 'map',
@@ -222,6 +237,12 @@
         speed:999
       });
 
+    var el = document.createElement('div');
+      el.className = 'marker';
+
+    var marker = false;
+
+
     var kitas, kitas_dict, kitas_keys = {}, selection = {},
       labels = {
         type: 'Art der Einrichtung',
@@ -233,8 +254,10 @@
       detailShow = false,
       geojson = {},
       filterElements = {},
-      circleLayer = null,
+      defaultLayer = null,
+      activeLayer = null,
       filterKeys = {},
+      postcodes = null, postcodeKeys = [],
       scales = {},
       filter = ['type','languages','topics','educational','parentType'], //parent;
       filters = {};
@@ -242,11 +265,16 @@
     d3.queue()
       .defer(d3.csv, "data/kitas.csv")
       .defer(d3.json, "data/kitas_dict.json")
-      .await(function(error, file1, file2) {
+      .defer(d3.csv, "data/plz.csv")
+      .await(function(error, file1, file2, file3) {
         if (error) { console.error(error); 
         } else {
           kitas = file1;
           kitas_dict = file2;
+          postcodes = file3;
+          postcodes.forEach(function(p){
+            postcodeKeys.push(p.id);
+          });
         }
         welcome();
       });
@@ -273,8 +301,8 @@
         kitas.forEach(function(d,i){
           kitas[i].all = parseInt(d.all);
           kitas[i].size = Math.pow(parseInt(d.all), 0.2);
-          kitas[i].lon = parseFloat(d.lon);
-          kitas[i].lat = parseFloat(d.lat);
+          kitas[i].lon = parseFloat(d.alon);
+          kitas[i].lat = parseFloat(d.alat);
           kitas[i].oname = kitas[i].name
 
           var pre = ['AWO Kita', 'AWO ', 'AWO-Kita', 'BOOT-KITA', 'Evangelische Kita ', 'EKG - ', 'EKT - ', 'FRÖBEL Kindergarten ', 'Humanistische Kita ', 'IB-Kita, ', 'Kindergarten ', 'Kita - ', 'Kita ', 'Kindertagesstätte ', 'Kita der Ev. Kirchengem. ', 'Kita der Kath. Kirchengem. ', 'Kinderladen ', 'Kita/', 'Ev. Kita ', 'Ev.Kita ', '- ', '-'];
@@ -315,29 +343,14 @@
           });
         });
 
-        map.addSource('kitas', { type: 'geojson', data: geojson });
+        map.addSource('kitas-default', { type: 'geojson', data: geojson });
+        map.addSource('kitas-active', { type: 'geojson', data: geojson });
 
-        circleLayer = map.addLayer({
-          "id": "kitas",
+        defaultLayer = map.addLayer({
+          "id": "kitas-default",
           "type": "circle",
-          "source": "kitas",
+          "source": "kitas-default",
           "paint": {
-            'circle-stroke-color': {
-              property: 'class',
-              type: 'categorical',
-              stops: [
-                ['normal', 'transparent'],
-                ['focussed', '#E60433'],
-                ['inactive', 'transparent']]
-            },
-            'circle-stroke-width': {
-              property: 'class',
-              type: 'categorical',
-              stops: [
-                ['normal', 0],
-                ['focussed', 5],
-                ['inactive', 0]]
-            },
             'circle-radius': {
               property: 'size',
               'base': 1.75,
@@ -352,101 +365,54 @@
               property: 'class',
               type: 'categorical',
               stops: [
-                ['normal', '#E60433'],
-                ['focussed', '#E60433'],
+                ['normal', 'rgba(230,4,51,1)'],
+                ['focussed', 'transparent'],
                 ['inactive', '#999999']]
             }
           }
         });
 
-        map.on('click', 'kitas', function (e) {
-          var d = JSON.parse(e.features[0].properties.data);
-          detailShow = true;
-          d3.select('#details .loading').style('display', 'block');
-          d3.select('#detail-content').style('display', 'none');
-
-          d3.selectAll('#sidemenu li').classed('active',false);
-          d3.selectAll('.sidebar-content').style('display','none');
-          d3.select('#details').style('display','block');
-          
-          d3.select('#sidebar').transition()
-            .delay(1)
-            .ease(d3.easeCubicInOut)
-            .duration(500)
-            .style('left','0px');
-
-          d3.json('./data/individual/' + d.id + '_kitas.json', function(err, data){
-            d3.select('#detail-name').text(d.oname);
-            d3.select('#detail-postcode').text(data.postcode.join(','));
-
-            data.link = 'https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/kitas/verzeichnis/'+data.link;
-
-            data.emailLink = 'mailto:'+data.email;
-            (['link','id','num','parent','address','district','type','parentType','mapLink','phone','email','emailLink']).forEach(function(l){
-              if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
-                d3.select('#detail-'+l).attr('href', data[l]);
-              }else{
-                d3.select('#detail-'+l).text(data[l]);
-              }
-            });
-
-            (['educational','topics','languages']).forEach(function(l){
-              while(data[l][0]==""){
-                data[l].splice(0,1);
-              }
-              if(data[l].length == 0){
-                d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','none');
-              }else{
-                d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','block');
-                d3.selectAll('#detail-' + l + ' li').remove();
-                d3.select('#detail-' + l).selectAll('li').data(data[l]).enter().append('li')
-                  .text(function(d){
-                    return d.trim();
-                  });
-              }
-            });
-
-            var noStructure = true;
-            d3.select('#detail-structure-head').style('display','block');
-            for(var label in data.structure){
-              if(data.structure[label] == undefined || data.structure[label] == ''){
-                d3.select('#detail-structure-'+label+'-row').style('display','none');
-              }else{
-                noStructure = false;
-                d3.select('#detail-structure-'+label+'-row').style('display','table-row');
-                d3.select('#detail-structure-'+label).text(data.structure[label]);
-              }
+        activeLayer = map.addLayer({
+          "id": "kitas-active",
+          "type": "circle",
+          "source": "kitas-active",
+          "paint": {
+            'circle-radius': {
+              property: 'size',
+              'base': 1.75,
+               stops: [
+                 [{zoom: 2, value: 0}, 0],
+                 [{zoom: 2, value: d3.max(kitas, function(d){return d.size;})}, 8],
+                 [{zoom: 22, value: 0}, 0],
+                 [{zoom: 22, value: d3.max(kitas, function(d){return d.size;})}, 500]
+              ]
+            },
+            'circle-color': {
+              property: 'class',
+              type: 'categorical',
+              stops: [
+                ['normal', 'transparent'],
+                ['focussed', '#E60433'],
+                ['inactive', 'transparent']]
             }
-            if(noStructure){
-              d3.select('#detail-structure-head').style('display','none');
-            }
+          }
+        });
 
-            var noOpen = true;
-            d3.selectAll('.detail-open').style('display','block');
-            data.open.forEach(function(o,i){
-              if(data.open[i][0] != undefined){
-                noOpen = false;
-                d3.select('#detail-open-'+i).text(data.open[i][0] + '-' + data.open[i][1]);
-              }else{
-                d3.select('#detail-open-'+i).text('');
-              }
-            });
-            if(noOpen){
-              d3.selectAll('.detail-open').style('display','none');
-            }
+        (['kitas-default','kitas-active']).forEach(function(k){
 
-            d3.select('#details .loading').style('display', 'none');
-            d3.select('#detail-content').style('display', 'block');
+          map.on('click', k, function (e) {
+            var d = JSON.parse(e.features[0].properties.data);
+            setDetails(d);
           });
 
-        });
+          map.on('mouseenter', k, function () {
+              map.getCanvas().style.cursor = 'pointer';
+          });
 
-        map.on('mouseenter', 'kitas', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
+          map.on('mouseleave', k, function () {
+              map.getCanvas().style.cursor = '';
+          });
 
-        map.on('mouseleave', 'kitas', function () {
-            map.getCanvas().style.cursor = '';
         });
 
         geojson.features = geojson.features.sort(function(a,b){
@@ -476,18 +442,128 @@
           .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
 
         d3.select('#detail-close').on('click', function(){
+          if(marker){
+            marker.remove();
+          }
+
           if(d3.selectAll('#sidemenu li.active').size()==0){
-            d3.select('#sidebar').transition()
-              .delay(1)
-              .ease(d3.easeCubicInOut)
-              .duration(500)
-              .style('left','-360px');
+            closeSidebar();
           }else{
             d3.select('#details').style('display','none');
             detailShow = false;
           }
         });
 
+    }
+
+    function setDetails(d){
+      detailShow = true;
+
+      if(marker){
+        marker.remove();
+      }
+
+      marker = new mapboxgl.Marker(el, {
+          offset: [5.5, -22.5]
+        })
+        .setLngLat([d.lon,d.lat])
+        .addTo(map);
+
+      d3.select('#details .loading').style('display', 'block');
+      d3.select('#detail-content').style('display', 'none');
+
+      d3.select('#details').style('display','block');
+      
+      openSidebar();
+
+      d3.json('./data/individual/' + d.id + '_kitas.json', function(err, data){
+        d3.select('#detail-name').text(d.oname);
+        d3.select('#detail-postcode').text(data.postcode.join(','));
+
+        data.link = 'https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/kitas/verzeichnis/'+data.link;
+
+        data.emailLink = 'mailto:'+data.email;
+        (['link','id','num','parent','address','district','type','parentType','mapLink','phone','email','emailLink']).forEach(function(l){
+          if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
+            d3.select('#detail-'+l).attr('href', data[l]);
+          }else{
+            d3.select('#detail-'+l).text(data[l]);
+          }
+        });
+
+        (['educational','topics','languages']).forEach(function(l){
+          while(data[l][0]==""){
+            data[l].splice(0,1);
+          }
+          if(data[l].length == 0){
+            d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','none');
+          }else{
+            d3.selectAll('#detail-' + l + '-head, #detail-' + l).style('display','block');
+            d3.selectAll('#detail-' + l + ' li').remove();
+            d3.select('#detail-' + l).selectAll('li').data(data[l]).enter().append('li')
+              .text(function(d){
+                return d.trim();
+              });
+          }
+        });
+
+        var noStructure = true;
+        d3.select('#detail-structure-head').style('display','block');
+        for(var label in data.structure){
+          if(data.structure[label] == undefined || data.structure[label] == ''){
+            d3.select('#detail-structure-'+label+'-row').style('display','none');
+          }else{
+            noStructure = false;
+            d3.select('#detail-structure-'+label+'-row').style('display','table-row');
+            d3.select('#detail-structure-'+label).text(data.structure[label]);
+          }
+        }
+
+        if(noStructure){
+          d3.select('#detail-structure-head').style('display','none');
+        }
+
+        var noOpen = true;
+
+        d3.selectAll('.detail-open').style('display','block');
+        data.open.forEach(function(o,i){
+          if(data.open[i][0] != undefined){
+            noOpen = false;
+            d3.select('#detail-open-'+i).text(data.open[i][0] + '-' + data.open[i][1]);
+          }else{
+            d3.select('#detail-open-'+i).text('');
+          }
+        });
+
+        if(noOpen){
+          d3.selectAll('.detail-open').style('display','none');
+        }
+
+        d3.select('#details .loading').style('display', 'none');
+        d3.select('#detail-content').style('display', 'block');
+      });
+    }
+
+    function openSidebar(){
+      if(!d3.select('#sidebar').classed('active')){
+        d3.select('#sidebar')
+          .classed('active',true);
+
+        if(window.innerWidth > 768){
+          map.panTo(map.getCenter(), {duration:500, offset:{x:200,y:0}});
+        }
+      }
+    }
+
+    function closeSidebar(){
+      if(d3.select('#sidebar').classed('active')){
+        d3.select('#sidebar')
+          .classed('active',false);
+
+        if(window.innerWidth > 768){
+          map.panTo(map.getCenter(), {duration:500, offset:{x:-200,y:0}});
+        }
+      }
     }
 
     function updateKitas(){
@@ -519,6 +595,8 @@
             }
           });
         }
+
+
         
         if(show){
           if(filtersFound){
@@ -533,7 +611,7 @@
         }
       });
 
-      map.setPaintProperty('kitas', 'circle-stroke-width', (found<10)?10/found+5:5);
+      map.setPaintProperty('kitas-active', 'circle-radius', (found<10)?10/found+5:5);
 
       geojson.features.sort(function(a,b){
         var ac = a.properties.class,
@@ -550,7 +628,8 @@
         return 0;  
       });
 
-      map.getSource('kitas').setData(geojson);
+      map.getSource('kitas-active').setData(geojson);
+      map.getSource('kitas-default').setData(geojson);
 
       //Reset filters
       filter.forEach(function(f){
@@ -667,7 +746,7 @@
         filterElements[f].titles = title;
 
         title.append('img').attr('src', 'images/icon-'+f+'@2x.png');
-        title.append('span').text(labels[f]);
+        title.append('span').html(labels[f]+'<img src="images/icon-checkmark-top@2x.png" />');
 
         var list = box.append('ul')
           .attr('class','filter-list-container')
@@ -731,7 +810,7 @@
         .transition()
           .ease(d3.easeCubicIn)
           .duration(500)
-          .style('opacity',0);
+          .style('display','none');
 
       d3.select('#sidebar')
         .transition()
@@ -746,25 +825,19 @@
       }).on('click', function(d){
         if(d3.select(this).classed('active')&&!detailShow){
           d3.selectAll('#sidemenu li').classed('active',false);
-          d3.select('#sidebar').transition()
-            .delay(1)
-            .ease(d3.easeCubicInOut)
-            .duration(500)
-            .style('left','-360px');
+          closeSidebar();
         }else{
           detailShow = false;
+          if(marker){
+            marker.remove();
+          }
 
           d3.selectAll('#sidemenu li').classed('active',false);
           d3.select(this).classed('active',true);
           
           d3.selectAll('.sidebar-content').style('display','none');
           d3.select('#'+d).style('display','block');
-          
-          d3.select('#sidebar').transition()
-            .delay(1)
-            .ease(d3.easeCubicInOut)
-            .duration(500)
-            .style('left','0px');
+          openSidebar();
         }
       });
     }
@@ -801,6 +874,30 @@
       }
       
       return t;
+    }
+
+    d3.select('#postcode-input').on('keyup', function(){
+      var v = this.value.trim();
+      if(v.length == 5){
+
+        var idx = postcodeKeys.indexOf(v);
+        if(idx>=0){
+          map.fitBounds([postcodes[idx].xmin,postcodes[idx].ymin,postcodes[idx].xmax,postcodes[idx].ymax]);
+          postcodeError('Nutzen Sie auch die Filter um die Auswahl einzuschränken.',false);
+        }else{
+          postcodeError('Dies ist keine Berliner Postleitzahlen.',true);
+        }
+
+      }else if(v.length > 5){
+        postcodeError('Postleitzahlen bestehen aus 5 Ziffern.',true);
+      }else{
+        postcodeError('',false);
+      }
+    });
+
+    function postcodeError(e,et){
+      d3.select('#postcode-error').text(e);
+      d3.select('#postcode-error').classed('error',et);
     }
 
     var active_selection = 0;

@@ -888,20 +888,45 @@ ul.filter-list-container li{
   padding-bottom:50px;
 }
 
-#detail-close{
+#detail-actions{
   float:right;
+  margin-top:-23px;
+}
+
+#detail-actions a{
+  float:right;
+  margin-left:7px;
   display: block;
   width: 20px;
   height: 20px;
-  margin-top:-23px;
   background-size:20px 20px;
   background-repeat: no-repeat;
+  -webkit-transition: opacity 0.2s;
+}
+
+#detail-actions a:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+#detail-actions a#detail-close{
   background-image:url('../images/close@2x.png');
 }
 
-#detail-close:hover{
-  cursor: pointer;
-  opacity: 0.5;
+#detail-actions a#detail-fav{
+  background-image:url('../images/icon-bookmark@2x.png');
+}
+
+#detail-actions a#detail-fav:hover{
+  background-image:url('../images/icon-bookmark-set@2x.png'); 
+}
+
+#detail-actions a#detail-print{
+  background-image:url('../images/icon-print@2x.png');
+}
+
+#detail-actions a#detail-print:hover{
+  background-image:url('../images/icon-print-hover@2x.png'); 
 }
 
 #details a{
@@ -959,8 +984,8 @@ ul.filter-list-container li{
 }
 
 @media (min-width: 768px) {
-  #detail-close{
-    margin-top:-13px;
+  #detail-actions a{
+    margin-top:-3px;
   }
 
   #details .inner{

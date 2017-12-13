@@ -15,6 +15,14 @@
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
   <link href="./css/logo.css" rel="stylesheet">
   <link href='./css/style.css' rel='stylesheet' />
+  <style type="text/css" media="print">
+    #sidemenu, #header,#loading,#map,#detail-meta a,#detail-close{display: none;}
+    #tsb-logo{top:20px; right:20px;}
+    #sidebar, #sidebar-content, .sidebar-content .sidebar .inner{width:100%;}
+    #tsb-logo{z-index:100;}
+    #details .inner{padding-top:40px;}
+    #details h2{max-width:70%;}
+  </style>
 </head>
 <body>
   <div id="header">
@@ -63,7 +71,11 @@
           </div>
           <div id="detail-content">
             <span id="detail-type"></span>
-            <a id="detail-close"></a>
+            <div id="detail-actions">
+              <a id="detail-close"></a>
+              <a id="detail-fav"></a>
+              <a href="javascript:window.print()" id="detail-print"></a>
+            </div>
             <h2 id="detail-name"></h2>
             <span id="detail-parent"></span>
             <span id="detail-parentType"></span>
@@ -208,6 +220,16 @@
           </div>
           <p>
             <img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Jeder Oberpunkt enthält mehrere Filter. Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben.
+          </p>
+        </div>
+      </div>
+      <div id="favorite" class="sidebar-content">
+        <div class="inner">
+          <ul id="favorites">
+            
+          </ul>
+          <p>
+            <img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Hier können Sie ihre Favoriten verwalten. Wenn Sie sich eine Kita anschauen können Sie über das Stern-Symbol die Kita hier ablegen. Über die Druckfunktion können Sie sich dann eine kompakte Liste ihrer Kitas ausdrucken. <i>Bitte beachten Sie, dass wir aus Datenschutzgründen keine Daten speichern, sobald Sie die Website verlassen werden Ihre Favoriten gelöscht.</i>
           </p>
         </div>
       </div>

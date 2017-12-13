@@ -18,10 +18,10 @@
 </head>
 <body>
   <div id="header">
-    <div id="logo"><img src="images/logo-tsb.svg" alt="Technologiestiftung Berlin" /></div>
+    <div id="logo"><img src="images/logo-icon@2x.png" alt="Kita-Suche" /></div>
     <h1>KITA-Suche</h1>
   </div>
-  <div class="loading">
+  <div class="loading" id="loading">
     <div class="outer"><div class="middle"><div class="inner">
       <div id="loader">
         <img class="i1" src="images/ani-1@2x.png" />
@@ -31,21 +31,24 @@
       </div>
     </div></div></div>
   </div>
-  <!--<div id="welcome">
-    <div class="outer"><div class="middle"><div class="inner">
-      <h2>Wilkommen</h2>
-      <p>Bitte geben Sie Ihre Straße und Hausnummer ein:</p>
-      <div id="form">
-        <input type="text" id="address" name="address" placeholder="Adresse..." autocomplete="off" />
-        <select id="number" name="number"></select>
-        <div id="autosuggest"><span>Bitte Straße auswählen:</span><ul></ul></div>
-        <input type="button" id="submit" value="Kitas suchen" />
-      </div>
-    </div>
-  </div>-->
   <div id="map"></div>
   <div id="sidebar">
     <div id="sidebar-content">
+      <div id="info" class="sidebar-content">
+        <div class="inner">
+          <div id="info-container">
+            <h2>Ein Angebot der Technologiestiftung Berlin</h2>
+            <p></p>
+          </div>
+        </div>
+      </div>
+      <div id="info" class="sidebar-content">
+        <div class="inner">
+          <div id="info-container">
+            <h2>Impressum:</h2>
+          </div>
+        </div>
+      </div>
       <div id="details" class="sidebar-content">
         <div class="inner">
           <div class="loading">
@@ -156,11 +159,40 @@
           </ul>
         </div>
       </div>
+      <div id="locate" class="sidebar-content">
+        <div class="inner">
+          <div id="locate-container">
+            <h2>Umkreissuche:</h2>
+            <div id="form">
+              <div class="formline">
+                <input type="text" id="address" name="address" placeholder="Adresse..." autocomplete="off" />
+                <select id="number" name="number"></select>
+              </div>
+              <hr class="divider" />
+              <div id="autosuggest"><span>Bitte Straße auswählen:</span><ul></ul></div>
+              <div class="form-container">
+                <select id="radius">
+                  <option value="0.5">0.5 km</option>
+                  <option value="1" selected="selected">1 km</option>
+                  <option value="2">2 km</option>
+                  <option value="3">3 km</option>
+                  <option value="5">5 km</option>
+                  <option value="7">7 km</option>
+                </select>
+              </div>
+            </div>
+            <p id="locate-error"></p>
+            <p>
+              <img src="images/touch@2x.png" alt="Geben Sie Ihre Straße und Hausnummer ein um die Kitas nach Entfernung zu filtern." />Geben Sie Ihre Straße und Hausnummer ein um die Kitas nach Entfernung zu filtern.
+            </p>
+          </div>
+        </div>
+      </div>
       <div id="postcode" class="sidebar-content">
         <div class="inner">
           <div id="postcode-container">
-            <strong>Postleitzahlsuche:</strong>
-            <input type="text" placeholder="Postleitzahl" id="postcode-input" />
+            <h2>Postleitzahlsuche:</h2>
+            <div class="form-container"><input type="text" placeholder="Postleitzahl" id="postcode-input" /></div>
             <p id="postcode-error"></p>
             <p>
               <img src="images/touch@2x.png" alt="Finden Sie die Kitas in einem bestimmten Postleitzahlgebiet." />Finden Sie die Kitas in einem bestimmten Postleitzahlgebiet.
@@ -171,7 +203,7 @@
       <div id="filter" class="sidebar-content">
         <div class="inner">
           <div id="filter-container">
-            <strong>Filter:</strong>
+            <h2>Filter:</h2>
             <a id="reset"><img src="images/icon-reset@2x.png" width="14" alt="Filter zurücksetzen" />Filter zurücksetzen</a>
           </div>
           <p>
@@ -181,64 +213,71 @@
       </div>
     </div>
     <div id="sidemenu">
-      <ul class="top">
-        <li data-item="filter">
-          <img src="images/menu-filter-white@2x.png" alt="Filter" width="40" class="white" />
-          <img src="images/menu-filter-black@2x.png" alt="Filter" width="40" class="black" />
-          <span>Filter</span>
-        </li>
-        <li data-item="postcode">
-          <img src="images/menu-postcode-white@2x.png" alt="PLZ" width="40" class="white" />
-          <img src="images/menu-postcode-black@2x.png" alt="PLZ" width="40" class="black" />
-          <span>PLZ</span>
-        </li>
-        <li data-item="locate">
-          <img src="images/menu-dist-white@2x.png" alt="Umkreissuche" width="40" class="white" />
-          <img src="images/menu-dist-black@2x.png" alt="Umkreissuche" width="40" class="black" />
-          <span>Umkreis</span>
-        </li>
-        <li data-item="list">
-          <img src="images/menu-list-white@2x.png" alt="Liste" width="40" class="white" />
-          <img src="images/menu-list-black@2x.png" alt="Liste" width="40" class="black" />
-          <span>Liste</span>
-        </li>
-      </ul>
-      <ul class="bottom">
-        <li data-item="info">
-          <img src="images/menu-info-white@2x.png" alt="Info" width="40" class="white" />
-          <img src="images/menu-info-black@2x.png" alt="Info" width="40" class="black" />
-          <span>Info</span>
-        </li>
-        <li data-item="legal">
-          <img src="images/menu-legal-white@2x.png" alt="Legal" width="40" class="white" />
-          <img src="images/menu-legal-black@2x.png" alt="Legal" width="40" class="black" />
-          <span>Legal</span>
-        </li>
-      </ul>
+      <nav>
+        <ul class="top">
+          <li data-item="filter">
+            <img src="images/menu-filter-white@2x.png" alt="Filter" width="40" class="white" />
+            <img src="images/menu-filter-black@2x.png" alt="Filter" width="40" class="black" />
+            <span>Filter</span>
+          </li>
+          <li data-item="postcode">
+            <img src="images/menu-postcode-white@2x.png" alt="PLZ" width="40" class="white" />
+            <img src="images/menu-postcode-black@2x.png" alt="PLZ" width="40" class="black" />
+            <span>PLZ</span>
+          </li>
+          <li data-item="locate">
+            <img src="images/menu-dist-white@2x.png" alt="Umkreissuche" width="40" class="white" />
+            <img src="images/menu-dist-black@2x.png" alt="Umkreissuche" width="40" class="black" />
+            <span>Umkreis</span>
+          </li>
+          <li data-item="list">
+            <img src="images/menu-list-white@2x.png" alt="Liste" width="40" class="white" />
+            <img src="images/menu-list-black@2x.png" alt="Liste" width="40" class="black" />
+            <span>Liste</span>
+          </li>
+          <li data-item="favorite">
+            <img src="images/menu-star-white@2x.png" alt="Liste" width="40" class="white" />
+            <img src="images/menu-star-black@2x.png" alt="Liste" width="40" class="black" />
+            <span>Merken</span>
+          </li>
+        </ul>
+        <ul class="bottom">
+          <li data-item="info" class="desktop-only">
+            <img src="images/menu-info-white@2x.png" alt="Info" width="40" class="white" />
+            <img src="images/menu-info-black@2x.png" alt="Info" width="40" class="black" />
+            <span>Info</span>
+          </li>
+          <li data-item="legal" class="desktop-only">
+            <img src="images/menu-legal-white@2x.png" alt="Legal" width="40" class="white" />
+            <img src="images/menu-legal-black@2x.png" alt="Legal" width="40" class="black" />
+            <span>Legal</span>
+          </li>
+          <li data-item="info" class="mobile-only">
+            <img src="images/menu-info-white@2x.png" alt="Info" width="40" class="white" />
+            <img src="images/menu-info-black@2x.png" alt="Info" width="40" class="black" />
+            <span>Info &amp; Legal</span>
+          </li>
+        </ul>
+      </nav>
     </div>
+  </div>
+  <div id="tsb-logo">
+    <a href="http://www.technologiestiftung-berlin.de"> 
+      <span>Ein Projekt der</span><br />
+      <img src="images/tsb-logo-content-vertical.svg" alt="Technologiestiftung Berlin" />
+    </a>
   </div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
   <script type="text/javascript">
 
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'style.json',
-      center: [13.4244,52.5047],
-      zoom: 10
-    });
+    var marker_kita_el = document.createElement('div');
+      marker_kita_el.className = 'marker kita';
 
-    map.fitBounds([[13.0790332437,52.3283651024],[13.7700526861,52.6876624308]],
-      {
-        offset: [0, 50],
-        speed:999
-      });
+    var marker_home_el = document.createElement('div');
+      marker_home_el.className = 'marker home';
 
-    var el = document.createElement('div');
-      el.className = 'marker';
-
-    var marker = false;
-
+    var marker_kita = false, marker_home = false;
 
     var kitas, kitas_dict, kitas_keys = {}, selection = {},
       labels = {
@@ -257,38 +296,46 @@
       postcodes = null, postcodeKeys = [],
       scales = {},
       filter = ['type','languages','topics','educational','parentType'], //parent;
-      filters = {};
+      filters = {},
+      home = false,
+      init = false;
 
-    d3.queue()
-      .defer(d3.csv, "data/kitas.csv")
-      .defer(d3.json, "data/kitas_dict.json")
-      .defer(d3.csv, "data/plz.csv")
-      .await(function(error, file1, file2, file3) {
-        if (error) { console.error(error); 
-        } else {
-          kitas = file1;
-          kitas_dict = file2;
-          postcodes = file3;
-          postcodes.forEach(function(p){
-            postcodeKeys.push(p.id);
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'style.json',
+      center: [13.4244,52.5047],
+      zoom: 10
+    });
+
+    map.on('load', function(e){
+      if(!init){
+        init = true;
+        d3.queue()
+          .defer(d3.csv, "data/kitas.csv")
+          .defer(d3.json, "data/kitas_dict.json")
+          .defer(d3.csv, "data/plz.csv")
+          .await(function(error, file1, file2, file3) {
+            if (error) { console.error(error); 
+            } else {
+              kitas = file1;
+              kitas_dict = file2;
+              postcodes = file3;
+              postcodes.forEach(function(p){
+                postcodeKeys.push(p.id);
+              });
+            }
+            welcome();
           });
-        }
-        welcome();
+      }
+    });
+
+    map.fitBounds([[13.0790332437,52.3283651024],[13.7700526861,52.6876624308]],
+      {
+        offset: [0, 50],
+        speed:999
       });
 
     function welcome(){
-      /*d3.select('#welcome')
-        .style('opacity',0)
-        .style('display','block')
-        .transition()
-          .ease(d3.easeCubicOut)
-          .delay(500)
-          .duration(500)
-          .style('opacity',1)
-          .style('padding-top','10px')
-          .on('end', function(){
-            d3.select('#address').node().focus();
-          });*/
         processKitas();
         processFilter();
     }
@@ -439,8 +486,8 @@
           .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
 
         d3.select('#detail-close').on('click', function(){
-          if(marker){
-            marker.remove();
+          if(marker_kita){
+            marker_kita.remove();
           }
 
           if(d3.selectAll('#sidemenu li.active').size()==0){
@@ -456,11 +503,11 @@
     function setDetails(d){
       detailShow = true;
 
-      if(marker){
-        marker.remove();
+      if(marker_kita){
+        marker_kita.remove();
       }
 
-      marker = new mapboxgl.Marker(el, {
+      marker_kita = new mapboxgl.Marker(marker_kita_el, {
           offset: [5.5, -22.5]
         })
         .setLngLat([d.lon,d.lat])
@@ -526,7 +573,7 @@
         data.open.forEach(function(o,i){
           if(data.open[i][0] != undefined){
             noOpen = false;
-            d3.select('#detail-open-'+i).text(data.open[i][0] + '-' + data.open[i][1]);
+            d3.select('#detail-open-'+i).html(data.open[i][0] + '<br />' + data.open[i][1]);
           }else{
             d3.select('#detail-open-'+i).text('');
           }
@@ -580,6 +627,10 @@
         d3.select('#reset').style('display','none');
       }
 
+      if(home){
+        filtersFound = true;
+      }
+
       var found = 0;
 
       geojson.features.forEach(function(d,i){
@@ -593,7 +644,10 @@
           });
         }
 
-
+        var radius = d3.select('#radius').property('value');
+        if(home && (geojson.features[i].properties.data.distance > radius)){
+          show = false;
+        }
         
         if(show){
           if(filtersFound){
@@ -749,6 +803,13 @@
           .attr('class','filter-list-container')
           .style('display', 'none');
 
+        if(window.innerWidth < 768){
+          width = window.innerWidth - 73;
+          if(width > 287){
+            width = 287;
+          }
+        }
+
         scales[f] = d3.scaleLinear().domain([0,d3.max(filters[f], function(d){return d.count;})]).range([borderRadius,width-2*borderRadius]);
 
         filters[f].sort(function(a,b){
@@ -803,11 +864,14 @@
     }
 
     function initDone(){
-      d3.select('#loading')
+      d3.select('#loading .outer')
         .transition()
           .ease(d3.easeCubicIn)
           .duration(500)
-          .style('display','none');
+          .style('opacity',0)
+            .on('end', function(){
+              (d3.select(this)).remove();
+            });
 
       d3.select('#sidebar')
         .transition()
@@ -825,8 +889,8 @@
           closeSidebar();
         }else{
           detailShow = false;
-          if(marker){
-            marker.remove();
+          if(marker_kita){
+            marker_kita.remove();
           }
 
           d3.selectAll('#sidemenu li').classed('active',false);
@@ -970,45 +1034,59 @@
           }
         });
         d3.selectAll('#number option').remove();
-        d3.select('#number').selectAll('option').data(data)
+        d3.select('#number').selectAll('option').data(([{id:-1,num:'&#9662;'}]).concat(data))
           .enter().append('option')
             .attr('value', function(d){return d.id;})
-            .text(function(d){ return d.num; });
+            .html(function(d){ return d.num; });
       });
     }
 
-    d3.select('#submit').on('click', function(){
-      //Check if road and number are present
-      var s_id = d3.select('#address').attr('data-id');
-      var select = document.getElementById( "number" );
-      var n_id = false;
-      if(select.selectedIndex > -1){
-        n_id = select.options[ select.selectedIndex ].value;
-      }
-      
-      if(s_id != null && n_id){
+    d3.select('#radius').on('change', function(){
+      updateKitas();
+    })
 
-        d3.select('#welcome')
-          .transition()
-            .ease(d3.easeCubicIn)
-            .duration(500)
-            .style('opacity',0)
-            .style('padding-top','0px')
-            .on('end', function(){
-              d3.select('#loading')
-                .transition()
-                  .ease(d3.easeCubicOut)
-                  .duration(500)
-                  .style('opacity',1);
+    d3.select('#number').on('change', function(){
+      var n_id = d3.select(this).property('value');
+      if(n_id != -1){
+        var s_id = d3.select('#address').attr('data-id');
+        if(s_id != null && n_id){
+          d3.json('http://localhost:1818/geo?num='+n_id, function(err, json){
 
-              d3.json('http://localhost:1818/geo?num='+n_id, function(err, json){
-                console.log(json.lat, json.lon);
-              });
-            });
-      }else{
-        alert('Bitte Straße und Hausnummer auswählen.')
+            home = {lon : json.lat, lat : json.lon};
+
+            if(marker_home){
+              marker_home.remove();
+            }
+
+            marker_home = new mapboxgl.Marker(marker_home_el, {
+                offset: [5.5, -22.5]
+              })
+              .setLngLat([json.lat,json.lon])
+              .addTo(map);
+
+            calculateDistances();
+            updateKitas();
+          });
+        }
       }
     });
+
+    function calculateDistances(){
+      geojson.features.forEach(function(d,i){
+        var dist = distance(d.geometry.coordinates[0],d.geometry.coordinates[1],home.lon, home.lat);
+        geojson.features[i].properties.data['distance'] = dist;
+      });
+    }
+
+    function distance(lon1, lat1, lon2, lat2) {
+      var p = 0.017453292519943295;
+      var c = Math.cos;
+      var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+              c(lat1 * p) * c(lat2 * p) * 
+              (1 - c((lon2 - lon1) * p))/2;
+
+      return 12742 * Math.asin(Math.sqrt(a));
+    }
   </script>
 </body>
 </html>

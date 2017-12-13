@@ -47,15 +47,47 @@ html, body{
   margin:0;
 }
 
+#tsb-logo{
+  position: fixed;
+  top:60px;
+  right:10px;
+  z-index:3;
+  font-weight:bold;
+  font-size:10px;
+}
+
+#tsb-logo a{
+  color:#000;
+  text-decoration: none;
+}
+
+#tsb-logo span{
+  padding-left:13px;
+}
+
+#tsb-logo img{
+  width:85px;
+  height:auto;
+}
+
+@media (min-width: 768px) {
+  #tsb-logo{
+    top:70px;
+    right:15px;
+  }
+
+  #tsb-logo img{
+    width:100px;
+  }
+}
+
 #logo{
   float:left;
-  margin-top:2px;
-  margin-right:10px;
-  margin-left:10px;
+  margin:5px 10px;
 }
 
 #logo img{
-  width:60px;
+  width:40px;
   height: auto;
 }
 
@@ -68,7 +100,6 @@ h1{
   font-weight:400;
   font-size:24px;
   color:#fff;
-  height:100px;
   text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
 }
 
@@ -102,9 +133,14 @@ h1{
   display: none;
 }
 
+#loading{
+  opacity: 1;
+}
+
 .loading .outer {
     display: table;
     position: absolute;
+    z-index:99;
     height: 90%;
     width: 100%;
     pointer-events: none;
@@ -299,16 +335,25 @@ h1{
 }
 
 #autosuggest{
-  width:100%;
   clear: both;
   background-color:rgba(0,0,0,0.2);
   border-radius:3px;
-  margin-bottom:10px;
+  margin:10px 20px 20px 20px;
   display: none;
+  padding-bottom:10px;
+}
+
+hr.divider{
+  visibility: hidden;
+  width:100%;
+  clear:both;
+  height:1px;
+  border:none;
 }
 
 #autosuggest span{
   display: block;
+  font-size:14px;
   padding-top:15px;
   margin:0 15px;
 }
@@ -343,11 +388,17 @@ h1{
 }
 
 .marker {
-  background-image: url('../images/marker_complete@2x.png');
   background-size: 41px 51px;
   width: 41px;
   height: 51px;
   cursor: pointer;
+}
+
+.marker.kita{
+  background-image: url('../images/marker_kita@2x.png');
+}
+.marker.home{
+  background-image: url('../images/marker_home@2x.png');
 }
 
 /*--- SIDEBAR ---*/
@@ -356,15 +407,12 @@ h1{
   width:100%;
   height:100vh;
   position: fixed;
-  margin-top:-50px;
+  margin-top:-70px;
   left:0;
   top:100vh;
-  z-index: 3;
+  z-index: 4;
   display: none;
   opacity: 0;
-  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
-  -moz-box-shadow:    0px 0px 10px 0px rgba(0,0,0,0.2);
-  box-shadow:         0px 0px 10px 0px rgba(0,0,0,0.2);
   transition-timing-function: ease-in-out;
   transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
 }
@@ -373,8 +421,18 @@ h1{
   top:50px;
 }
 
+#sidebar-content{
+  float:left;
+  width:100%;
+  height:100vh;
+  background-color:#fff;
+}
+
 @media (min-width: 768px) {
   #sidebar{
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow:    0px 0px 10px 0px rgba(0,0,0,0.2);
+    box-shadow:         0px 0px 10px 0px rgba(0,0,0,0.2);
     margin-top:0;
     width:420px;
     top:0;
@@ -385,19 +443,22 @@ h1{
     top:0;
     left:0;
   }
-}
 
-#sidebar-content{
-  float:left;
-  width:360px;
-  height:100vh;
-  background-color:#fff;
+  #sidebar-content{
+    width:360px;
+  }
 }
 
 #sidemenu{
-  float:left;
-  height:100vh;
-  width:60px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow:    0px 0px 10px 0px rgba(0,0,0,0.2);
+  box-shadow:         0px 0px 10px 0px rgba(0,0,0,0.2);
+  position: fixed;
+  z-index:99;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:70px;
   background-color:#3453CC;
 }
 
@@ -411,8 +472,11 @@ h1{
 }
 
 #sidemenu ul li{
-  padding: 10px 0 10px 0;
-  width:60px;
+  padding: 5px 0 0 0;
+  font-size:12px;
+  width:50px;
+  height:65px;
+  float:left;
 }
 
 #sidemenu ul li.active,
@@ -424,12 +488,16 @@ h1{
 
 #sidemenu ul.top{
   position: absolute;
-  top:50px;
+  left:0px;
 }
 
 #sidemenu ul.bottom{
   position: absolute;
-  bottom:0px;
+  right:0px;
+}
+
+#sidemenu ul.bottom .mobile-only{
+  width:70px;
 }
 
 #sidemenu span{
@@ -447,6 +515,36 @@ h1{
 #sidemenu li.active .black{display: block;}
 #sidemenu li:hover .white,
 #sidemenu li.active .white{display: none;}
+
+@media (min-width: 768px) {
+  #sidemenu{
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+    position: relative;
+    height:100vh;
+    width:60px;
+    float:left;
+  }
+
+  #sidemenu ul.top{
+    top:50px;
+    left:auto;
+  }
+
+  #sidemenu ul.bottom{
+    bottom:0px;
+    right:auto;
+  }
+
+  #sidemenu ul li{
+    float:none;
+    padding: 10px 0 10px 0;
+    font-size:14px;
+    width:60px;
+    height:auto;
+  }
+}
 
 #reset{
   float:right;
@@ -466,44 +564,75 @@ h1{
 
 .sidebar-content{
   display: none;
-  width:360px;
+  width:100%;
   height:100vh;
   background-color:rgba(255,255,255,1);
   overflow-y:auto;
 }
 
+@media (min-width: 768px) {
+  .sidebar-content{
+    width:360px;
+  }
+}
+
 #filter-container{
   margin-top:70px;
-  width:355px;
+  width:100%;
 }
 
-#postcode-container{
-  margin-top:70px;
+@media (min-width: 768px) {
+  #filter-container{
+    width:355px;
+  }
 }
 
-#filter p, #postcode p{
+#postcode-container, #locate-container{
+  margin-top:90px;
+}
+
+@media (min-width: 768px) {
+  #postcode-container, #locate-container{
+    margin-top:70px;
+  }
+}
+
+#locate-error, #locate-container>p{
+  clear:both;
+  padding-top:20px;
+}
+
+#filter p, #postcode p, #locate p{
   font-size:14px;
   display: block;
   margin:20px;
 }
 
-#postcode p.error{
+#locate #locate-error{
+  display: none;
+}
+
+#postcode p.error, #locate p.error{
   color:red;
   font-weight:bold;
 }
 
-#filter p img, #postcode p img{
+#filter p img, #postcode p img, #locate p img{
   float:left;
   margin-right:10px;
   width:24px;
   height:36px;
 }
 
-#filter .inner, #postcode .inner{
+#filter .inner{
+  padding-top:20px;
+}
+
+#filter .inner, #postcode .inner, #locate .inner{
   pointer-events: all;
 }
 
-#filter strong, #postcode strong{
+#filter h2, #postcode h2, #locate h2{
   font-size:18px;
   font-weight: bold;
   display: block;
@@ -553,7 +682,8 @@ h1{
 
 .filter-container{
   margin:10px 20px 0 0;
-  width:314px;
+  width:auto;
+  display: block;
   padding-left:15px;
   border-left:5px solid #fff;
 }
@@ -635,24 +765,77 @@ ul.filter-list-container li{
   stroke-linejoin: round;
 }
 
+@media (min-width: 768px) {
+
+  #filter .inner{
+    padding-top:0;
+  }
+
+  .filter-container{
+    margin:10px 20px 0 0;
+    width:314px;
+    padding-left:15px;
+  }
+}
+
 #list .inner{
   padding-top:120px;
 }
 
-#list input, #postcode input{
-  display: block;
-  width:295px;
+.form-container{
   margin:0 20px;
+}
+
+#list input, #postcode input, #number, #address, #submit, #radius{
+  display: block;
+  width:100%;
   font-size:18px;
-  padding:5px 10px;
+  padding:5px 0;
   border-radius:5px;
   -webkit-appearance: none; 
   -moz-appearance: none; 
   border:1px solid #999;
+  text-indent: 10px;
 }
 
 #postcode input{
   margin-top:20px;
+}
+
+.formline{
+  margin: 0 20px;
+}
+
+#address{
+  margin:0;
+  width:70%;
+  float:left;
+}
+
+#number{
+  margin:0;
+  float:right;
+  width:25%;
+}
+
+@media (min-width: 768px) {
+  #list input, #postcode input, #number, #address, #submit, #radius{
+    width:295px;
+    padding:5px 10px;
+    text-indent: 0px;
+  }
+
+  #radius{
+    width:321px;
+  }
+
+  #address{
+    width:210px;
+  }
+
+  #number{
+    width:70px;
+  }
 }
 
 #list ul, #list ul li{
@@ -687,21 +870,22 @@ ul.filter-list-container li{
 }
 
 #search{
+  z-index:9;
   position: fixed;
   top:70px;
 }
 
-#details .inner{
-  padding-top:80px;
-}
-
 #details{
+  position: relative;
+  z-index: 10;
   font-size:14px;
 }
 
 #details .inner{
-  width:320px;
+  display: block;
+  padding-top:90px;
   margin:0 20px;
+  padding-bottom:50px;
 }
 
 #detail-close{
@@ -709,7 +893,7 @@ ul.filter-list-container li{
   display: block;
   width: 20px;
   height: 20px;
-  margin-top:-13px;
+  margin-top:-23px;
   background-size:20px 20px;
   background-repeat: no-repeat;
   background-image:url('../images/close@2x.png');
@@ -733,6 +917,10 @@ ul.filter-list-container li{
   font-weight:bold;
 }
 
+#detail-type{
+  display: block;
+}
+
 #detail-meta{
   padding-top:40px;
   padding-bottom:40px;
@@ -752,6 +940,11 @@ ul.filter-list-container li{
   border:none;
 }
 
+#details table{
+  width:100%;
+  max-width:320px;
+}
+
 #details td, #details th{
   padding-right:5px;
 }
@@ -763,4 +956,24 @@ ul.filter-list-container li{
 #details ul{
   list-style-type: circle;
   padding:0 0 0 20px;
+}
+
+@media (min-width: 768px) {
+  #detail-close{
+    margin-top:-13px;
+  }
+
+  #details .inner{
+    width:320px;
+    padding-top:70px;
+    padding-bottom:0px;
+  }
+}
+
+.desktop-only{ display:none; }
+.mobile-only{ display:block; }
+
+@media (min-width: 768px) {
+  .desktop-only{ display:block; }
+  .mobile-only{ display:none; }
 }

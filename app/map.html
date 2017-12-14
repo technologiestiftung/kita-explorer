@@ -130,7 +130,7 @@
                 max = data[i].routes.car.routes[0].duration;
               }
               data[i].routes.car.routes[0].geometry.coordinates.unshift([13.433543,52.482121])
-              data[i].routes.car.routes[0].geometry.coordinates.push([kitas[kitas_keys[data[i].kita_id]].lon,kitas[kitas_keys[data[i].kita_id]].lat])
+              data[i].routes.car.routes[0].geometry.coordinates.push([kitas[kitas_keys[data[i].kita_id]].alon,kitas[kitas_keys[data[i].kita_id]].alat])
               routes.features.push({
                 type:'Feature',
                 properties:{

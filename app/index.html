@@ -18,10 +18,11 @@
   <style type="text/css" media="print">
     #sidemenu, #header,#loading,#map,#detail-meta a,#detail-close{display: none;}
     #tsb-logo{top:20px; right:20px;}
-    #sidebar, #sidebar-content, .sidebar-content .sidebar .inner{width:100%;}
+    body, html, #sidebar, #sidebar-content, .sidebar-content, .sidebar-content .sidebar .inner{width:100%; height:auto; overflow:visible; position:relative;}
     #tsb-logo{z-index:100;}
     #details .inner{padding-top:40px;}
     #details h2{max-width:70%;}
+    #favorite-container>p{display:none;}
   </style>
 </head>
 <body>
@@ -225,12 +226,18 @@
       </div>
       <div id="favorite" class="sidebar-content">
         <div class="inner">
-          <ul id="favorites">
-            
-          </ul>
-          <p>
-            <img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Hier können Sie ihre Favoriten verwalten. Wenn Sie sich eine Kita anschauen können Sie über das Stern-Symbol die Kita hier ablegen. Über die Druckfunktion können Sie sich dann eine kompakte Liste ihrer Kitas ausdrucken. <i>Bitte beachten Sie, dass wir aus Datenschutzgründen keine Daten speichern, sobald Sie die Website verlassen werden Ihre Favoriten gelöscht.</i>
-          </p>
+          <div id="favorite-container">
+            <h2>Merkliste</h2>
+            <div id="favorite-actions">
+                <a href="javascript:window.print()" id="favorite-print"></a>
+            </div>
+            <ul id="favorites">
+              
+            </ul>
+            <p>
+              <img src="images/touch@2x.png" alt="Sie können einen oder mehrere Filter auswählen um die entsprechenden Kitas hervorzuheben." />Hier können Sie ihre Favoriten verwalten. Wenn Sie sich eine Kita anschauen können Sie über das Stern-Symbol die Kita hier ablegen. Über die Druckfunktion können Sie sich dann eine kompakte Liste ihrer Kitas ausdrucken. <i>Bitte beachten Sie, dass wir aus Datenschutzgründen keine Daten speichern, sobald Sie die Website verlassen werden Ihre Favoriten gelöscht.</i>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -260,7 +267,8 @@
           <li data-item="favorite">
             <img src="images/menu-star-white@2x.png" alt="Liste" width="40" class="white" />
             <img src="images/menu-star-black@2x.png" alt="Liste" width="40" class="black" />
-            <span>Merken</span>
+            <span class="badge">5</span>
+            <span id="sidemenu-fav-label">Merken</span>
           </li>
         </ul>
         <ul class="bottom">
@@ -300,6 +308,14 @@
       marker_home_el.className = 'marker home';
 
     var marker_kita = false, marker_home = false;
+
+    var favorites = [];
+
+    window.onbeforeunload = function(){
+      if(favorites.length >= 1){
+        return 'Aus Datenschutzgründen wird die Merkliste beim Verlassen der Seite gelöscht. Sind Sie sicher, dass Sie gehen wollen?';
+      }
+    };
 
     var kitas, kitas_dict, kitas_keys = {}, selection = {},
       labels = {
@@ -498,14 +514,7 @@
           return 'block';
         });
 
-        li.append('span').attr('class', 'type')
-          .text(function(d){return kitas_dict.type[d.properties.data.type]+' der '+kitas_dict.parent[d.properties.data.parent];});
-
-        li.append('span').attr('class', 'name')
-          .text(function(d){return d.properties.data.name;});
-
-        li.append('span').attr('class', 'address')
-          .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;});
+        buildList(li,false);
 
         d3.select('#detail-close').on('click', function(){
           if(marker_kita){
@@ -516,14 +525,60 @@
             closeSidebar();
           }else{
             d3.select('#details').style('display','none');
+            d3.selectAll('.sidebar-content').style('visibility','visible');
             detailShow = false;
           }
         });
 
     }
 
+    function buildList(li, details){
+      if(details){
+        li.append('a').attr('class', 'favorite-remove')
+          .on('click', function(d){
+            favorites.splice(favorites.indexOf(d.properties.data.id),1);
+            updateFavorites();
+          });
+      }
+
+      li.append('span').attr('class', 'type')
+        .text(function(d){return kitas_dict.type[d.properties.data.type]+' der '+kitas_dict.parent[d.properties.data.parent];})
+        .on('click', function(d){
+          setDetails(d.properties.data);
+        });
+
+      li.append('span').attr('class', 'name')
+        .text(function(d){return d.properties.data.name;})
+        .on('click', function(d){
+          setDetails(d.properties.data);
+        });
+
+      li.append('span').attr('class', 'address')
+        .text(function(d){return d.properties.data.address+', '+d.properties.data.plz+' '+d.properties.data.district;})
+        .on('click', function(d){
+          setDetails(d.properties.data);
+        });
+
+      if(details){
+        li.append('span').attr('class', 'contact')
+          .html(function(d){
+            var data = kitas[kitas_keys[d.properties.data.id]];
+            var str = '';
+            if(('phone' in data) && data.phone && data.phone != undefined && data.phone.length > 1){
+              str += data.phone+'<br />';
+            }
+            if(('email' in data) && data.email && data.email != undefined && data.email.length > 1){
+              str += '<a href="'+data.email+'">'+data.email+'</a>';
+            }
+            return str;
+          });
+      }
+    }
+
     function setDetails(d){
       detailShow = true;
+      d3.selectAll('.sidebar-content').style('visibility','hidden');
+      d3.selectAll('#details').style('visibility','visible');
 
       if(marker_kita){
         marker_kita.remove();
@@ -539,10 +594,35 @@
       d3.select('#detail-content').style('display', 'none');
 
       d3.select('#details').style('display','block');
+
+      d3.select('#detail-fav')
+        .classed('active', function(){
+          if(favorites.indexOf(d.id)>=0){
+            return true;
+          }
+          return false;
+        })
+        .datum(d.id).on('click', function(){
+          var obj = d3.select(this);
+          var id = obj.datum();
+          if(favorites.indexOf(id)>=0){
+            obj.classed('active',false);
+            favorites.splice(favorites.indexOf(id),1);
+          }else{
+            favorites.push(id);
+            obj.classed('active',true);
+          }
+          updateFavorites();
+        });
       
       openSidebar();
 
       d3.json('./data/individual/' + d.id + '_kitas.json', function(err, data){
+
+        //Enriching global data set
+        kitas[kitas_keys[d.id]].email = data.email;
+        kitas[kitas_keys[d.id]].phone = data.phone;
+
         d3.select('#detail-name').text(d.oname);
         d3.select('#detail-postcode').text(data.postcode.join(','));
 
@@ -608,6 +688,18 @@
         d3.select('#details .loading').style('display', 'none');
         d3.select('#detail-content').style('display', 'block');
       });
+    }
+
+    function updateFavorites(){
+      d3.select('#favorites').selectAll('li').remove();
+      var li = d3.select('#favorites').selectAll('li').data(geojson.features.filter(function(d){ if(favorites.indexOf(d.properties.data.id)>=0){ return true; } return false; })).enter().append('li');
+      buildList(li, true);
+      var badge = d3.select('.badge').text(favorites.length);
+      if(favorites.length > 0){
+        badge.style('visibility','visible');
+      }else{
+        badge.style('visibility','hidden');
+      }
     }
 
     function openSidebar(){
@@ -911,6 +1003,7 @@
           closeSidebar();
         }else{
           detailShow = false;
+          d3.selectAll('.sidebar-content').style('visibility','visible');
           if(marker_kita){
             marker_kita.remove();
           }

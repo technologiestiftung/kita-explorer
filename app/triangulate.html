@@ -195,8 +195,8 @@
         var geojson = {type:'FeatureCollection',features:[]};
         data.forEach(function(d,i){
           data[i].all = +d.all;
-          data[i].lon = parseFloat(d.lon);
-          data[i].lat = parseFloat(d.lat);
+          data[i].lon = parseFloat(d.alon);
+          data[i].lat = parseFloat(d.alat);
           kitas_keys[d.id] = i;
           geojson.features.push({
             type:'Feature',

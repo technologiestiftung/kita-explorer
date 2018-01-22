@@ -183,16 +183,16 @@ function restOfProcess(){
       d.type + ',' +
       d.parent + ',' +
       d.parentType + ',' +
-      d.open[0][0] + ',' +
-      d.open[0][1] + ',' +
-      d.open[1][0] + ',' +
-      d.open[1][1] + ',' +
-      d.open[2][0] + ',' +
-      d.open[2][1] + ',' +
-      d.open[3][0] + ',' +
-      d.open[3][1] + ',' +
-      d.open[4][0] + ',' +
-      d.open[4][1] + ',' +
+      timeConversion(d.open[0][0]) + ',' +
+      timeConversion(d.open[0][1]) + ',' +
+      timeConversion(d.open[1][0]) + ',' +
+      timeConversion(d.open[1][1]) + ',' +
+      timeConversion(d.open[2][0]) + ',' +
+      timeConversion(d.open[2][1]) + ',' +
+      timeConversion(d.open[3][0]) + ',' +
+      timeConversion(d.open[3][1]) + ',' +
+      timeConversion(d.open[4][0]) + ',' +
+      timeConversion(d.open[4][1]) + ',' +
       d.structure.overall + ',' +
       d.structure.over + ',' +
       d.structure.under
@@ -200,4 +200,12 @@ function restOfProcess(){
 
   fs.writeFileSync('./data/kitas.csv', csv, 'utf8')
   fs.writeFileSync('./data/kitas_dict.json', JSON.stringify(dict), 'utf8')
+}
+
+function timeConversion(t){
+  if(t.indexOf(':')>=0){
+    var times = t.split(':');
+    return parseInt(times[0])*4 + parseInt(times[1])/15;
+  }
+  return 'NaN';
 }

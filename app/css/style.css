@@ -564,19 +564,23 @@ li:hover .badge, li.active .badge{
   }
 }
 
-#reset{
+#reset,#plz-reset{
   float:right;
   font-size:14px;
   margin:-22px 20px 0 0;
   display: none;
 }
 
-#reset:hover{
+#plz-reset{
+  margin-top:-35px;
+}
+
+#reset:hover, #plz-reset:hover{
   opacity: 0.5;
   cursor: pointer;
 }
 
-#reset img{
+#reset img, #plz-reset img{
   margin-right:5px;
 }
 
@@ -622,7 +626,7 @@ li:hover .badge, li.active .badge{
   padding-top:20px;
 }
 
-#filter p, #postcode p, #locate p, #favorite p{
+#filter p, #postcode p, #locate p, #favorite p, #list p{
   font-size:14px;
   display: block;
   margin:20px;
@@ -637,7 +641,11 @@ li:hover .badge, li.active .badge{
   font-weight:bold;
 }
 
-#filter p img, #postcode p img, #locate p img, #favorite p img{
+#list p#search_placeholder{
+  display: none;
+}
+
+#filter p img, #postcode p img, #locate p img, #favorite p img, #list p img{
   float:left;
   margin-right:10px;
   width:24px;
@@ -752,6 +760,13 @@ ul.filter-list-container li:before{
    margin-bottom:4px;
 }
 
+ul.filter-list-container.clean-filter-list li.active:hover:before,
+ul.filter-list-container.clean-filter-list li.active:before,
+ul.filter-list-container.clean-filter-list li:hover:before,
+ul.filter-list-container.clean-filter-list li:before{
+  background-image:none;
+}
+
 ul.filter-list-container li.active:hover:before,
 ul.filter-list-container li.active:before{ 
   background-image: url('../images/icon-checked@2x.png'); 
@@ -765,6 +780,12 @@ ul.filter-list-container li:hover,
 ul.filter-list-container li.active{
   cursor: pointer;
   font-weight:bold;
+}
+
+ul.filter-list-container.clean-filter-list li:hover,
+ul.filter-list-container.clean-filter-list li.active{
+  cursor: normal;
+  font-weight:normal;
 }
 
 ul.filter-list-container li{
@@ -799,7 +820,8 @@ ul.filter-list-container li{
 }
 
 #list .inner{
-  padding-top:120px;
+  padding-top:140px;
+  padding-bottom:100px;
 }
 
 .form-container{
@@ -818,10 +840,6 @@ ul.filter-list-container li{
   text-indent: 10px;
 }
 
-#postcode input{
-  margin-top:20px;
-}
-
 .formline{
   margin: 0 20px;
 }
@@ -838,7 +856,32 @@ ul.filter-list-container li{
   width:25%;
 }
 
+
+#list span#pagination_info{
+  padding:0 10px;
+  font-size:14px;
+  display: inline-block;
+}
+
+#pagination{
+  display: block;
+  width:100%;
+  text-align: center;
+  font-size:14px;
+  padding: 20px 0;
+}
+
+#pagination a:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
+  #list .inner{
+    padding-bottom:0px;
+    padding-top:120px;
+  }
+
   #list input, #postcode input, #number, #address, #submit, #radius{
     width:295px;
     padding:5px 10px;
@@ -908,7 +951,13 @@ ul.filter-list-container li{
 #search{
   z-index:9;
   position: fixed;
-  top:70px;
+  width:100%;
+  margin-top:-52px;
+}
+
+#search .inner-search{
+  display: block;
+  margin:0 20px;
 }
 
 #details{
@@ -971,6 +1020,10 @@ ul.filter-list-container li{
 
 #detail-actions a#detail-close{
   background-image:url('../images/close@2x.png');
+}
+
+#detail-actions a#detail-map{
+  background-image:url('../images/icon-mapmarker@2x.png');
 }
 
 #detail-actions a#detail-fav{

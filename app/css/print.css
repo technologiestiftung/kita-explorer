@@ -4,4 +4,5 @@ body, html, #sidebar, #sidebar-content, .sidebar-content, .sidebar-content .side
 #tsb-logo{z-index:100;}
 #details .inner{padding-top:40px;}
 #details h2{max-width:70%;}
+#favorite h2{max-width:70%; margin-left:10px;}
 #favorite-container>p{display:none;}

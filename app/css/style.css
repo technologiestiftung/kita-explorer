@@ -626,7 +626,7 @@ li:hover .badge, li.active .badge{
   padding-top:20px;
 }
 
-#filter p, #postcode p, #locate p, #favorite p, #list p{
+#filter p, #postcode p, #locate p, #favorite p, #list p, #legal p, #info p{
   font-size:14px;
   display: block;
   margin:20px;
@@ -656,11 +656,19 @@ li:hover .badge, li.active .badge{
   padding-top:20px;
 }
 
+#legal p a, #info p a{
+  color:#000;
+}
+
+#legal .inner, #info .inner{
+  padding-top:55px;
+}
+
 #filter .inner, #postcode .inner, #locate .inner{
   pointer-events: all;
 }
 
-#filter h2, #postcode h2, #locate h2, #favorite h2{
+#filter h2, #postcode h2, #locate h2, #favorite h2, #legal h2, #info h2{
   font-size:18px;
   font-weight: bold;
   display: block;
@@ -1057,6 +1065,26 @@ ul.filter-list-container li{
   line-height: 23px;
   font-weight:bold;
 }
+
+#detail-route{
+  display: none;
+}
+
+#detail-route > div{
+  margin:20px 0;
+  width:33%;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size:80px 49px;
+  width:33%;
+  float:left;
+  padding-top:60px;
+  text-align: center;
+}
+
+#detail-route-car{ background-image: url('../images/distance-car@2x.png'); }
+#detail-route-bicycle{ background-image: url('../images/distance-bike@2x.png'); }
+#detail-route-foot{ background-image: url('../images/distance-walking@2x.png'); }
 
 #detail-type{
   display: block;

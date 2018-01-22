@@ -56,9 +56,9 @@
 
   <link href="https://fonts.googleapis.com/css?family=Contrail+One|Open+Sans:300,300i,700" rel="stylesheet">
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
-  <link href="./css/logo.css" rel="stylesheet">
-  <link href='./css/style.css' rel='stylesheet' />
-  <link href='./css/print.css' rel='stylesheet' media="print" />
+  <link href="./css/logo-min.css" rel="stylesheet">
+  <link href='./css/style-min.css' rel='stylesheet' />
+  <link href='./css/print-min.css' rel='stylesheet' media="print" />
 </head>
 <body>
   <div id="header">
@@ -81,15 +81,26 @@
       <div id="info" class="sidebar-content">
         <div class="inner">
           <div id="info-container">
-            <h2>Ein Angebot der Technologiestiftung Berlin</h2>
-            <p></p>
+            <h2>Kita-Suche Berlin</h2>
+            <p>
+              Die Kita-Suche ist ein Projekt des neuen <a href="https://lab.technologiestiftung-berlin.de">Ideation &amp;&nbsp;Prototyping Lab</a> der gemeinnützigen Technologiestiftung Berlin. Das Lab entwickelt digitale Tools und Anwendungen, die in erster Linie den Bürgerinnen und Bürgern der Stadt zugutekommen. Die Kita-Suche soll Eltern bei der Suche der passenden Kita unterstützen. Die zeitgemäßen Such- und Filterfunktionen sowie die Kartendarstellung werden durch Daten des Landes Berlin möglich gemacht. Durch Beispiele wie dieses versucht das Ideation &amp;&nbsp;Protoyping Lab den Mehrwert von offenen Daten für Bürger*innen und Verwaltung zu unterstreichen.
+            </p>
           </div>
         </div>
       </div>
       <div id="legal" class="sidebar-content">
         <div class="inner">
           <div id="legal-container">
-            <h2>Impressum:</h2>
+            <h2>Kontakt</h2>
+            <p>Grunewaldstraße 61-62<br />
+10825 Berlin<br />
++49 30 209 69 99-0<br />
+info@technologiestiftung-berlin.de</p>
+            <p>
+              <a href="https://www.technologiestiftung-berlin.de/de/stiftung/kontakt-anfahrt/">Kontaktdaten</a><br />
+              <a href="https://www.technologiestiftung-berlin.de/de/impressum">Impressum</a><br />
+              <a href="https://www.technologiestiftung-berlin.de/de/datenschutz/">Datenschutz</a>
+            </p>
           </div>
         </div>
       </div>
@@ -116,6 +127,21 @@
             <h2 id="detail-name"></h2>
             <span id="detail-parent"></span>
             <span id="detail-parentType"></span>
+
+            <div id="detail-route">
+              <div id="detail-route-car">
+                <span class="detail-route-distance"></span>
+                <span class="detail-route-time"></span>
+              </div>
+              <div id="detail-route-bicycle">
+                <span class="detail-route-distance"></span>
+                <span class="detail-route-time"></span>
+              </div>
+              <div id="detail-route-foot">
+                <span class="detail-route-distance"></span>
+                <span class="detail-route-time"></span>
+              </div>
+            </div>
 
             <p id="detail-location">
               <span id="detail-address"></span><br />
@@ -346,6 +372,6 @@
   </div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
-  <script src="js/main.js"></script>
+  <script src="js/main-min.js"></script>
 </body>
 </html>

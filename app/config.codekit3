@@ -9,6 +9,30 @@
 	],
 "creatorBuild": "26148",
 "files": {
+	"\/_index.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/_index.html",
+		"oF": 0
+		},
+	"\/browserconfig.xml": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/browserconfig.xml",
+		"oF": 0
+		},
+	"\/css\/logo-min.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/logo-min-min.css",
+		"oF": 0,
+		"oS": 3
+		},
 	"\/css\/logo.css": {
 		"aP": 1,
 		"bl": 0,
@@ -16,6 +40,16 @@
 		"ma": 0,
 		"oA": 0,
 		"oAP": "\/css\/logo-min.css",
+		"oF": 0,
+		"oS": 3
+		},
+	"\/css\/print-min.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/print-min-min.css",
 		"oF": 0,
 		"oS": 3
 		},
@@ -29,6 +63,16 @@
 		"oF": 0,
 		"oS": 3
 		},
+	"\/css\/style-min.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/style-min-min.css",
+		"oF": 0,
+		"oS": 3
+		},
 	"\/css\/style.css": {
 		"aP": 1,
 		"bl": 0,
@@ -36,6 +80,16 @@
 		"ma": 0,
 		"oA": 0,
 		"oAP": "\/css\/style-min.css",
+		"oF": 0,
+		"oS": 3
+		},
+	"\/css\/temporary-min.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/temporary-min-min.css",
 		"oF": 0,
 		"oS": 3
 		},
@@ -20591,6 +20645,13 @@
 		"oAP": "\/data\/plz.csv",
 		"oF": 0
 		},
+	"\/favicon.ico": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/favicon.ico",
+		"oF": 0
+		},
 	"\/finder.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -20603,6 +20664,13 @@
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/full.html",
+		"oF": 0
+		},
+	"\/humans.txt": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/humans.txt",
 		"oF": 0
 		},
 	"\/icons\/favicon-16.jpg": {
@@ -20685,6 +20753,17 @@
 		"oT": 1,
 		"q": 100
 		},
+	"\/icons\/icon.png": {
+		"ft": 32768,
+		"iS": 9578,
+		"oA": 0,
+		"oAP": "\/icons\/icon.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
 	"\/icons\/ms-icon-144x144.png": {
 		"ft": 32768,
 		"iS": 8284,
@@ -20704,6 +20783,61 @@
 		"oF": 0,
 		"oIPL": 0,
 		"opt": 0,
+		"q": 100
+		},
+	"\/icons\/tile-wide.png": {
+		"ft": 32768,
+		"iS": 8153,
+		"oA": 0,
+		"oAP": "\/icons\/tile-wide.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/icons\/tile150x150.png": {
+		"ft": 32768,
+		"iS": 7279,
+		"oA": 0,
+		"oAP": "\/icons\/tile150x150.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/icons\/tile310x310.png": {
+		"ft": 32768,
+		"iS": 16477,
+		"oA": 0,
+		"oAP": "\/icons\/tile310x310.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/icons\/tile558x558.png": {
+		"ft": 32768,
+		"iS": 33700,
+		"oA": 0,
+		"oAP": "\/icons\/tile558x558.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/icons\/tile70x70.png": {
+		"ft": 32768,
+		"iS": 3125,
+		"oA": 0,
+		"oAP": "\/icons\/tile70x70.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
 		"q": 100
 		},
 	"\/images\/ani-1.png": {
@@ -22792,13 +22926,6 @@
 		"plM": 3758088159,
 		"prP": 0
 		},
-	"\/index.html": {
-		"cB": 0,
-		"ft": 8192,
-		"oA": 0,
-		"oAP": "\/index.html",
-		"oF": 0
-		},
 	"\/index_dev.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -22822,6 +22949,16 @@
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/logo.min-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
+	"\/js\/main-min.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "\/js\/main-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 0
@@ -22871,6 +23008,20 @@
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/map.html",
+		"oF": 0
+		},
+	"\/robots.txt": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/robots.txt",
+		"oF": 0
+		},
+	"\/site.webmanifest": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/site.webmanifest",
 		"oF": 0
 		},
 	"\/style.json": {

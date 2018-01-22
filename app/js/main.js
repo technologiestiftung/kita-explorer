@@ -396,8 +396,8 @@ function setDetails(d){
 
         var dur = Math.round(data[key].routes[0].duration/60) + '&nbsp;min';
 
-        d3.select('#detail-route-'+key+' .detail-route-distance').text(dist);
-        d3.select('#detail-route-'+key+' .detail-route-time').text(dur);
+        d3.select('#detail-route-'+key+' .detail-route-distance').html(dist);
+        d3.select('#detail-route-'+key+' .detail-route-time').html(dur);
 
         geojson.features.push({"type": "Feature","properties": {"type":key},"geometry":data[key].routes[0].geometry});
       });
@@ -407,6 +407,7 @@ function setDetails(d){
     });
   }else{
     d3.select('#detail-route').style('display','none');
+    map.getSource('routing').setData({type:'FeatureCollection',features:[]});
   }
 
   if(marker_kita){
@@ -1278,6 +1279,7 @@ d3.select('#number').on('change', function(){
           d3.selectAll('#number option').remove();
           d3.select('#address').node().value = '';
           home = false;
+          map.getSource('routing').setData({type:'FeatureCollection',features:[]});
           marker_home.remove();
           updateKitas();
           d3.select('#plz-reset').style('display','none');

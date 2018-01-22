@@ -159,19 +159,19 @@ h1{
     pointer-events: none;
 }
 
-#loader{
+.loader{
   margin-left:50%;
   z-index:4;
 }
 
-#loader img{
+.loader img{
   float:left;
   margin-left:-64px;
   width:64px;
   height:64px;
 }
 
-#loader img.i1{
+.loader img.i1{
   margin-left:-32px;
   -webkit-animation: rotatingR 2s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -moz-animation: rotatingR 2s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
@@ -180,7 +180,7 @@ h1{
   animation: rotatingR 2s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
 }
 
-#loader img.i2{
+.loader img.i2{
   -webkit-animation: rotatingL 2s 1.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -moz-animation: rotatingL 2s 1.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -ms-animation: rotatingL 2s 1.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
@@ -188,7 +188,7 @@ h1{
   animation: rotatingL 2s 1.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
 }
 
-#loader img.i3{
+.loader img.i3{
   -webkit-animation: rotatingR 2s 1s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -moz-animation: rotatingR 2s 1s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -ms-animation: rotatingR 2s 1s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
@@ -196,7 +196,7 @@ h1{
   animation: rotatingR 2s 1s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
 }
 
-#loader img.i4{
+.loader img.i4{
   -webkit-animation: rotatingL 2s 0.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -moz-animation: rotatingL 2s 0.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;
   -ms-animation: rotatingL 2s 0.5s cubic-bezier(0.410, 0.210, 0.620, 0.845) infinite;

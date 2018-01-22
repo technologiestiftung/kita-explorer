@@ -1,0 +1,10 @@
+/* TEAM */
+
+    Sebastian Meier -- Lead Data Scientist -- @seb_meier
+    Benjamin Seibel -- Lab Lead -- @bnjmnsbl
+
+/* SITE */
+
+Standards: CSS3, HTML5
+Components: D3
+Software: Sublime Text 3

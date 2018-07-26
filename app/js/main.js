@@ -469,7 +469,9 @@ function setDetails(d){
 
     data.emailLink = 'mailto:'+data.email;
     (['link','id','num','parent','address','district','type','parentType','mapLink','phone','email','emailLink']).forEach(function(l){
-      if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
+      if(l == 'emailLink'){
+        d3.select('#detail-email').attr('href', data[l]);
+      }else if(l.indexOf('link')>=0 || l.indexOf('Link')>=0){
         d3.select('#detail-'+l).attr('href', data[l]);
       }else{
         d3.select('#detail-'+l).text(data[l]);

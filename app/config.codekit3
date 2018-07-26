@@ -7,7 +7,7 @@
 		"uuidString": "2F2A3ADB-1AD5-457D-91D5-60C1B49A407C"
 		}
 	],
-"creatorBuild": "26148",
+"creatorBuild": "26680",
 "files": {
 	"\/_index.html": {
 		"cB": 0,
@@ -20566,6 +20566,13 @@
 		"oAP": "\/data\/kitas.csv",
 		"oF": 0
 		},
+	"\/data\/kitas.geojson": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/data\/kitas.geojson",
+		"oF": 0
+		},
 	"\/data\/kitas_carto.csv": {
 		"cB": 0,
 		"ft": 8192,
@@ -20580,6 +20587,13 @@
 		"oAP": "\/data\/kitas_clean.csv",
 		"oF": 0
 		},
+	"\/data\/kitas_clean_light.csv": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/data\/kitas_clean_light.csv",
+		"oF": 0
+		},
 	"\/data\/kitas_dict.json": {
 		"ft": 524288,
 		"oA": 1,
@@ -20587,6 +20601,13 @@
 		"oF": 0,
 		"oO": 0,
 		"oS": 1
+		},
+	"\/data\/locations.csv.*": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/data\/locations.csv.*",
+		"oF": 0
 		},
 	"\/data\/lor_dict.json": {
 		"ft": 524288,
@@ -20676,6 +20697,7 @@
 	"\/icons\/favicon-16.jpg": {
 		"ft": 16384,
 		"iS": 867,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/icons\/favicon-16.jpg",
 		"oF": 0,
@@ -20686,6 +20708,7 @@
 	"\/icons\/favicon-58px.jpg": {
 		"ft": 16384,
 		"iS": 1738,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/icons\/favicon-58px.jpg",
 		"oF": 0,
@@ -20696,6 +20719,7 @@
 	"\/icons\/favicon-96px.jpg": {
 		"ft": 16384,
 		"iS": 2815,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/icons\/favicon-96px.jpg",
 		"oF": 0,
@@ -20735,6 +20759,7 @@
 	"\/icons\/favicon.jpg": {
 		"ft": 16384,
 		"iS": 1113,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/icons\/favicon.jpg",
 		"oF": 0,
@@ -20778,6 +20803,7 @@
 	"\/icons\/social_media.jpg": {
 		"ft": 16384,
 		"iS": 246522,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/icons\/social_media.jpg",
 		"oF": 0,
@@ -22359,6 +22385,7 @@
 	"\/images\/temporary\/Desktop.jpg": {
 		"ft": 16384,
 		"iS": 131273,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Desktop.jpg",
 		"oF": 0,
@@ -22380,6 +22407,7 @@
 	"\/images\/temporary\/Desktop@2x.jpg": {
 		"ft": 16384,
 		"iS": 324457,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Desktop@2x.jpg",
 		"oF": 0,
@@ -22401,6 +22429,7 @@
 	"\/images\/temporary\/favicon-16.jpg": {
 		"ft": 16384,
 		"iS": 867,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/favicon-16.jpg",
 		"oF": 0,
@@ -22411,6 +22440,7 @@
 	"\/images\/temporary\/favicon-58px.jpg": {
 		"ft": 16384,
 		"iS": 1738,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/favicon-58px.jpg",
 		"oF": 0,
@@ -22421,6 +22451,7 @@
 	"\/images\/temporary\/favicon-96px.jpg": {
 		"ft": 16384,
 		"iS": 2815,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/favicon-96px.jpg",
 		"oF": 0,
@@ -22438,6 +22469,7 @@
 	"\/images\/temporary\/favicon.jpg": {
 		"ft": 16384,
 		"iS": 1113,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/favicon.jpg",
 		"oF": 0,
@@ -22459,6 +22491,7 @@
 	"\/images\/temporary\/Filter-Desktop.jpg": {
 		"ft": 16384,
 		"iS": 112924,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Filter-Desktop.jpg",
 		"oF": 0,
@@ -22480,6 +22513,7 @@
 	"\/images\/temporary\/Filter-Desktop@2x.jpg": {
 		"ft": 16384,
 		"iS": 297114,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Filter-Desktop@2x.jpg",
 		"oF": 0,
@@ -22501,6 +22535,7 @@
 	"\/images\/temporary\/Logo-Berlin.jpg": {
 		"ft": 16384,
 		"iS": 4366,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-Berlin.jpg",
 		"oF": 0,
@@ -22522,6 +22557,7 @@
 	"\/images\/temporary\/Logo-Berlin@2x.jpg": {
 		"ft": 16384,
 		"iS": 10612,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-Berlin@2x.jpg",
 		"oF": 0,
@@ -22543,6 +22579,7 @@
 	"\/images\/temporary\/Logo-IBB.jpg": {
 		"ft": 16384,
 		"iS": 4375,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-IBB.jpg",
 		"oF": 0,
@@ -22564,6 +22601,7 @@
 	"\/images\/temporary\/Logo-IBB@2x.jpg": {
 		"ft": 16384,
 		"iS": 10113,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-IBB@2x.jpg",
 		"oF": 0,
@@ -22585,6 +22623,7 @@
 	"\/images\/temporary\/Logo-TSB.jpg": {
 		"ft": 16384,
 		"iS": 5210,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-TSB.jpg",
 		"oF": 0,
@@ -22606,6 +22645,7 @@
 	"\/images\/temporary\/Logo-TSB@2x.jpg": {
 		"ft": 16384,
 		"iS": 11531,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Logo-TSB@2x.jpg",
 		"oF": 0,
@@ -22627,6 +22667,7 @@
 	"\/images\/temporary\/Mobile.jpg": {
 		"ft": 16384,
 		"iS": 31593,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Mobile.jpg",
 		"oF": 0,
@@ -22648,6 +22689,7 @@
 	"\/images\/temporary\/Mobile@2x.jpg": {
 		"ft": 16384,
 		"iS": 85641,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Mobile@2x.jpg",
 		"oF": 0,
@@ -22669,6 +22711,7 @@
 	"\/images\/temporary\/search-icon.jpg": {
 		"ft": 16384,
 		"iS": 1565,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/search-icon.jpg",
 		"oF": 0,
@@ -22690,6 +22733,7 @@
 	"\/images\/temporary\/search-icon@2x.jpg": {
 		"ft": 16384,
 		"iS": 3861,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/search-icon@2x.jpg",
 		"oF": 0,
@@ -22711,6 +22755,7 @@
 	"\/images\/temporary\/social_media.jpg": {
 		"ft": 16384,
 		"iS": 246522,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/social_media.jpg",
 		"oF": 0,
@@ -22721,6 +22766,7 @@
 	"\/images\/temporary\/Teaser-Favorite.jpg": {
 		"ft": 16384,
 		"iS": 3717,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Teaser-Favorite.jpg",
 		"oF": 0,
@@ -22742,6 +22788,7 @@
 	"\/images\/temporary\/Teaser-Favorite@2x.jpg": {
 		"ft": 16384,
 		"iS": 7768,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Teaser-Favorite@2x.jpg",
 		"oF": 0,
@@ -22763,6 +22810,7 @@
 	"\/images\/temporary\/Teaser-Location.jpg": {
 		"ft": 16384,
 		"iS": 3729,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Teaser-Location.jpg",
 		"oF": 0,
@@ -22784,6 +22832,7 @@
 	"\/images\/temporary\/Teaser-Location@2x.jpg": {
 		"ft": 16384,
 		"iS": 10295,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/Teaser-Location@2x.jpg",
 		"oF": 0,
@@ -22805,6 +22854,7 @@
 	"\/images\/temporary\/tsb-logo-content-vertical.jpg": {
 		"ft": 16384,
 		"iS": 7076,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/tsb-logo-content-vertical.jpg",
 		"oF": 0,
@@ -22826,6 +22876,7 @@
 	"\/images\/temporary\/tsb-logo-content-vertical@2x.jpg": {
 		"ft": 16384,
 		"iS": 15877,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/images\/temporary\/tsb-logo-content-vertical@2x.jpg",
 		"oF": 0,
@@ -22925,6 +22976,13 @@
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
+		},
+	"\/index.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/index.html",
+		"oF": 0
 		},
 	"\/index_dev.html": {
 		"cB": 0,
@@ -23069,7 +23127,8 @@
 	"creationDate": 538306848,
 	"displayValue": "app",
 	"displayValueWasSetByUser": 0,
-	"iconImageName": "meme-ariel"
+	"iconImageName": "meme-ariel",
+	"iconImageWasSetByUser": 0
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -23077,6 +23136,7 @@
 	"animateCSSInjections": 1,
 	"autoBuildNewItems": 1,
 	"autoprefixerBrowserString": "> 1%, last 2 versions, Firefox ESR, Opera 12.1",
+	"autoprefixerEnableIEGrid": 0,
 	"babelAuxiliaryCommentAfter": "",
 	"babelAuxiliaryCommentBefore": "",
 	"babelConfigFileHandlingType": 0,
@@ -23640,6 +23700,10 @@
 		"id-match": {
 			"active": 0,
 			"optionString": "'^[a-z]+([A-Z][a-z]+)*$', {'properties': false, 'onlyDeclarations': true}"
+			},
+		"implicit-arrow-linebreak": {
+			"active": 0,
+			"optionString": "'beside'"
 			},
 		"indent": {
 			"active": 0,
@@ -24867,6 +24931,7 @@
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
+		"outputFormat": 0,
 		"quality": 100
 		},
 	"languageDefaultsJS": {

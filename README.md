@@ -1,6 +1,8 @@
 # kita-explorer
 Kindertagesstätten (Kitas) Berlin 
 
+- [Website/Map](http://kita-suche.berlin/)
+- [Blogpost about the project](https://lab.technologiestiftung-berlin.de/projects/kitas/index.html)
 
 ## Scraper
 

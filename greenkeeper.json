@@ -1,0 +1,12 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "data-cleaning/package.json",
+        "georeference/package.json",
+        "routing/package.json",
+        "scraper/package.json"
+      ]
+    }
+  }
+}

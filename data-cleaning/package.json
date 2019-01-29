@@ -9,9 +9,9 @@
   "author": "Sebastian Meier",
   "license": "MIT",
   "dependencies": {
-    "d3": "^4.10.2",
-    "fs": "0.0.1-security",
-    "simple-statistics": "^5.0.0",
+    "d3": "^5.8.0",
+    "fs": "0.0.2",
+    "simple-statistics": "^7.0.0",
     "topojson": "^3.0.2",
     "turf": "^3.0.14"
   }

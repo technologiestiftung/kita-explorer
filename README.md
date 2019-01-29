@@ -1,4 +1,7 @@
 # kita-explorer
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/technologiestiftung/kita-explorer.svg)](https://greenkeeper.io/)
+
 Kindertagesstätten (Kitas) Berlin 
 
 - [Website/Map](http://kita-suche.berlin/)

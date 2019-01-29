@@ -9,7 +9,7 @@
   "author": "Sebastian Meier",
   "license": "MIT",
   "dependencies": {
-    "d3": "^4.11.0",
+    "d3": "^5.8.0",
     "spatialite": "^0.1.0"
   }
 }

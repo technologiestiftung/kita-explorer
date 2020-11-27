@@ -1652,6 +1652,7 @@ id,alat,alon,address,district,plz,educational,topics,languages,name,type,parent,
 601229,52.48676,13.52425,"Marksburgstr. 38 -40","Karlshorst",10318,,,,"Kita Kleine Wichtel",0,983,1,24,72,24,72,24,72,24,72,24,72,134,63,71
 2585,52.40373,13.58116,"Dahmestr. 4","Bohnsdorf",12526,"4","6",,"Kita Kleiner Fratz",0,689,1,28,68,28,68,28,68,28,68,28,68,31,19,12
 2762,52.46464,13.438,"Glasower Str. 18","Neukölln",12051,"3","3",,"Kita Kleiner Fratz",0,689,1,24,72,24,72,24,72,24,72,24,72,156,106,50
+2983,52.61272,13.43017,"Triftstr. 31","Französisch Buchholz",13127,,,,"Kita Kleiner Fratz",0,689,1,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0
 278179,52.42189,13.53818,"Semmelweisstr. 10","Altglienicke",12524,"3",,,"Kita Kleiner Fratz",0,689,1,24,68,24,68,24,68,24,68,24,68,45,30,15
 575229,52.5494,13.44761,"Langhansstr. 142","Weißensee",13086,,,,"Kita Kleiner Fratz",0,689,1,28,68,28,68,28,68,28,68,28,68,25,18,7
 643229,52.54774,13.36507,"Prinz-Eugen-Str. 8","Wedding",13347,"13",,,"Kita Kleiner Fratz",0,689,1,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,35,25,10

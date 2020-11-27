@@ -534,24 +534,6 @@ li:hover .badge, li.active .badge{
 #sidemenu li:hover .white,
 #sidemenu li.active .white{display: none;}
 
-@media (hover:none) {
-  #sidemenu ul li:hover{
-    background-color:#3453CC;
-    color:#fff;
-  }
-
-  #sidemenu ul li.active:hover{
-    background-color:#fff;
-    color:#000;
-  }
-
-  #sidemenu li:hover .black{display: none;}
-  #sidemenu li:hover .white{display: block;}
-
-  #sidemenu li.active:hover .black{display: block;}
-  #sidemenu li.active:hover .white{display: none;}
-}
-
 @media (min-width: 768px) {
   #sidemenu{
     -webkit-box-shadow: none;
@@ -1059,16 +1041,6 @@ ul.filter-list-container li{
 #detail-actions a#detail-fav:hover,
 #detail-actions a#detail-fav.active{
   background-image:url('../images/icon-bookmark-set@2x.png'); 
-}
-
-@media(hover:none){
-  #detail-actions a#detail-fav:hover{
-    background-image:url('../images/icon-bookmark@2x.png'); 
-  }
-
-  #detail-actions a#detail-fav.active:hover{
-    background-image:url('../images/icon-bookmark-set@2x.png'); 
-  }
 }
 
 #favorite-actions a#favorite-print,

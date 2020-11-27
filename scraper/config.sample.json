@@ -1,9 +1,0 @@
-{
-  "api_key":"YOUR API KEY",
-  "email":{
-  	"user":"",
-  	"pass":"",
-  	"server":"",
-  	"email":""
-  }
-}

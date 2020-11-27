@@ -1,5 +1,7 @@
 /*global mapboxgl,d3,console*/
 
+var geocoder = 'https://geocoding-git-db-fix.technologiestiftung1.vercel.app';
+
 var marker_kita_el = document.createElement('div');
   marker_kita_el.className = 'marker kita';
 
@@ -137,35 +139,6 @@ function processKitas(){
 
     map.addSource('kitas-default', { type: 'geojson', data: geojson });
     map.addSource('kitas-active', { type: 'geojson', data: geojson });
-    map.addSource('routing', { type: 'geojson', data: {"type": "FeatureCollection","features": []} });
-
-
-    map.addLayer({
-      "id": "routing",
-      "type": "line",
-      "source": "routing",
-      "paint": {
-        'line-width': {
-            'property': 'type',
-            'type': 'categorical',
-            'stops': [
-              ['car', 1.5],
-              ['bicycle', 2],
-              ['foot', 2.5]
-            ]
-        },
-        'line-opacity': 1,
-        'line-color': {
-            'property': 'type',
-            'type': 'categorical',
-            'stops': [
-              ['car', '#EAB83D'],
-              ['bicycle', '#B04AC8'],
-              ['foot', '#54AA1D']
-            ]
-        }
-      }
-    });
 
     map.addLayer({
       "id": "kitas-default",
@@ -381,36 +354,7 @@ function setDetails(d){
   d3.selectAll('.sidebar-content').style('visibility','hidden');
   d3.selectAll('#details').style('visibility','visible');
 
-  if(home && (window.innerWidth>768)){
-    d3.select('#detail-route').style('display','block').selectAll('span').text('...');
-    d3.json('https://tsb.ara.uberspace.de/tsb-routing/route?start='+home.lon+','+home.lat+'&end='+d.lon+','+d.lat+'&modal=multi', function(err, data){
-      if(err){ console.error(err); }
-
-      var geojson = {"type": "FeatureCollection","features": []};
-
-      (['foot','bicycle','car']).forEach(function(key){
-        var dist = Math.round(data[key].routes[0].distance);
-        if(dist > 999){
-          dist = (dist/1000).toFixed(1) + '&nbsp;km';
-        }else{
-          dist = dist + '&nbsp;m';
-        }
-
-        var dur = Math.round(data[key].routes[0].duration/60) + '&nbsp;min';
-
-        d3.select('#detail-route-'+key+' .detail-route-distance').html(dist);
-        d3.select('#detail-route-'+key+' .detail-route-time').html(dur);
-
-        geojson.features.push({"type": "Feature","properties": {"type":key},"geometry":data[key].routes[0].geometry});
-      });
-
-      map.getSource('routing').setData(geojson);
-
-    });
-  }else{
-    d3.select('#detail-route').style('display','none');
-    map.getSource('routing').setData({type:'FeatureCollection',features:[]});
-  }
+  d3.select('#detail-route').style('display','none');
 
   if(marker_kita){
     marker_kita.remove();
@@ -1198,12 +1142,12 @@ d3.select('#address').on('keyup', function(){
   }else{
     if(this.value.length > 2){
       d3.selectAll('#number option').remove();
-      d3.json('https://tsb.ara.uberspace.de/tsb-geocoding/street?street='+this.value, function(err, data){
+      d3.json(geocoder+'/street?street='+this.value, function(err, data){
         active_selection = 0;
         d3.selectAll('#autosuggest ul li').remove();
         d3.select('#autosuggest').style('display','block');
         d3.select('#autosuggest ul').selectAll('li')
-          .data(data).enter().append('li').append('a')
+          .data(data.data.filter(function(d){ return (d.id > 10332) ? false : true; })).enter().append('li').append('a')
             .html(function(d){ return '&raquo;&nbsp;'+d.street+((parseInt(d.plz)>0)?' '+d.plz:''); })
             .on('click', function(){
               selectStreet(d3.select(this).datum());
@@ -1220,8 +1164,8 @@ function selectStreet(d){
   d3.select('#address').attr('data-id', d.id);
   d3.selectAll('#autosuggest ul li').remove();
   d3.select('#autosuggest').style('display','none');
-  d3.json('https://tsb.ara.uberspace.de/tsb-geocoding/num?street='+d.id, function(err, data){
-    data.forEach(function(d){
+  d3.json(geocoder+'/num?street='+d.id, function(err, data){
+    data.data.forEach(function(d){
       var num_a = d.num.split(''), num = '', letter = '';
       num_a.forEach(function(n){
         if(!isNaN(n)){
@@ -1233,7 +1177,7 @@ function selectStreet(d){
       d.int = +num;
       d.letter = letter;
     });
-    data.sort(function(a,b){
+    data.data.sort(function(a,b){
       if(a.int === b.int){
         if (a.letter < b.letter) {
           return -1;
@@ -1247,7 +1191,7 @@ function selectStreet(d){
       }
     });
     d3.selectAll('#number option').remove();
-    d3.select('#number').selectAll('option').data(([{id:-1,num:'&#9662;'}]).concat(data))
+    d3.select('#number').selectAll('option').data(([{id:-1,num:'&#9662;'}]).concat(data.data))
       .enter().append('option')
         .attr('value', function(d){return d.id;})
         .html(function(d){ return d.num; });
@@ -1263,9 +1207,9 @@ d3.select('#number').on('change', function(){
   if(n_id != -1){
     var s_id = d3.select('#address').attr('data-id');
     if(s_id != null && n_id){
-      d3.json('https://tsb.ara.uberspace.de/tsb-geocoding/geo?num='+n_id, function(err, json){
+      d3.json(geocoder+'/geo?num='+n_id, function(err, data){
 
-        home = {lon : json.lat, lat : json.lon};
+        home = {lon : data.data.lat, lat : data.data.lon};
 
         if(marker_home){
           marker_home.remove();
@@ -1274,14 +1218,13 @@ d3.select('#number').on('change', function(){
         marker_home = new mapboxgl.Marker(marker_home_el, {
             offset: [5.5, -22.5]
           })
-          .setLngLat([json.lat,json.lon])
+          .setLngLat([data.data.lat,data.data.lon])
           .addTo(map);
 
         d3.select('#plz-reset').style('display','block').on('click', function(){
           d3.selectAll('#number option').remove();
           d3.select('#address').node().value = '';
           home = false;
-          map.getSource('routing').setData({type:'FeatureCollection',features:[]});
           marker_home.remove();
           updateKitas();
           d3.select('#plz-reset').style('display','none');

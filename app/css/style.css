@@ -1111,22 +1111,6 @@ ul.filter-list-container li{
   display: none;
 }
 
-#detail-route > div{
-  margin:20px 0;
-  width:33%;
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-size:80px 49px;
-  width:33%;
-  float:left;
-  padding-top:60px;
-  text-align: center;
-}
-
-#detail-route-car{ background-image: url('../images/distance-car@2x.png'); }
-#detail-route-bicycle{ background-image: url('../images/distance-bike@2x.png'); }
-#detail-route-foot{ background-image: url('../images/distance-walking@2x.png'); }
-
 #detail-type{
   display: block;
 }

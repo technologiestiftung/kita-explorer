@@ -44,9 +44,11 @@ var kitas, kitas_dict, kitas_keys = {}, selection = {},
   home = false,
   init = false;
 
+mapboxgl.accessToken = 'pk.eyJ1IjoianVsaTg0IiwiYSI6ImNraTBpazBqbzMwazAyc2t6Y25pdnVwb3AifQ.s6Uck73RqMtgps2MjwrSAg';
+
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'style.json',
+  style: 'mapbox://styles/mapbox/light-v9',
   center: [13.4244,52.5047],
   zoom: 10
 });

@@ -46,7 +46,7 @@ var kitas, kitas_dict, kitas_keys = {}, selection = {},
   home = false,
   init = false;
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidGVjaG5vbG9naWVzdGlmdHVuZyIsImEiOiJja2kyM3o3czkxNWJlMnpxaDd4NDFiaGQwIn0.QwIRggX-KeA12KlY-o51zw';
+mapboxgl.accessToken = 'pk.eyJ1IjoianVsaTg0IiwiYSI6ImNraTBpazBqbzMwazAyc2t6Y25pdnVwb3AifQ.s6Uck73RqMtgps2MjwrSAg';
 
 var map = new mapboxgl.Map({
   container: 'map',

@@ -1,6 +1,6 @@
 /*global mapboxgl,d3,console*/
 
-var geocoder = 'https://geocoding-git-db-fix.technologiestiftung1.vercel.app';
+var geocoder = "https://geocoding.vercel.app";
 
 var marker_kita_el = document.createElement('div');
   marker_kita_el.className = 'marker kita';

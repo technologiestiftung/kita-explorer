@@ -815,7 +815,6 @@ id,alat,alon,address,district,plz,educational,topics,languages,name,type,parent,
 433129,52.5236,13.39133,"Ziegelstr. 27","Mitte",10117,"2","1",,"Kinderinsel Ziegelstraße",0,598,1,32,70,32,70,32,70,32,70,32,70,23,14,9
 115129,52.56372,13.41976,"Binzstr. 51","Pankow",13189,"2|3","4",,"Kinderkrippe Junges Gemüse",0,577,2,32,68,32,68,32,68,32,68,32,68,13,0,13
 149229,52.6094,13.31619,"Artemisstr. 38","Waidmannslust",13469,,,,"Kinderkrippe MINI-KIDS mit GRIPS",0,581,1,30,66,30,66,30,66,30,66,30,66,16,0,16
-2686,52.62401,13.31206,"Berliner Str. 88A","Hermsdorf",13467,"2",,,"Kinderkrippe Zwergenschloß",0,599,1,30,66,30,66,30,66,30,66,30,66,25,0,25
 722229,52.47452,13.34073,"Sponholzstr. 51 -52","Schöneberg",12159,,,,"Kinderladen Friedenauer Spatzen",0,125,2,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,25,NaN,NaN
 1700,52.5087,13.29649,"Suarezstr. 54","Charlottenburg",14057,"4|2",,,"Kinderladen Geierbande",1,600,2,32,68,32,68,32,68,32,68,32,68,20,20,0
 371129,52.51913,13.26883,"Akazienallee 34","Westend",14050,"0|2",,,"Kinderladen Akazienhof",1,601,1,32,66,32,66,32,66,32,66,32,66,25,20,5
@@ -2371,7 +2370,6 @@ id,alat,alon,address,district,plz,educational,topics,languages,name,type,parent,
 1995,52.48937,13.52278,"Hönower Str. 31","Karlshorst",10318,,,,"Kita Zwergenland",0,1007,4,26,70,26,70,26,70,26,70,26,70,128,128,0
 298129,52.45531,13.38111,"Werderstr. 17","Tempelhof",12105,,,,"Kita Zwergenland",0,300,2,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,0,0
 2154,52.55683,13.57264,"Oberweißbacher Str. 8","Marzahn",12687,"2",,,"Kita Zwergenoase/Kigä NordOst",0,0,0,24,72,24,72,24,72,24,72,24,72,198,146,52
-293,52.61932,13.31047,"Olafstr. 16","Hermsdorf",13467,"2","1|2|4",,"Kita Zwergenschloß",0,599,1,30,66,30,66,30,66,30,66,30,66,37,37,0
 107129,52.54155,13.39376,"Brunnenstr. 70","Gesundbrunnen",13357,,,,"Kita Zwergenschule",0,1146,1,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,45,45,0
 402129,52.48663,13.42706,"Hobrechtstr. 8","Neukölln",12047,"9|4|1",,,"Kita Zwergplaneten",0,663,1,28,64,28,64,28,64,28,64,28,64,30,30,0
 637229,52.55115,13.51079,"Gehrenseestr. 99","Alt-Hohenschönhausen",13057,"13|2|3","2",,"Kita Zwergtaucher",0,993,1,26,70,26,70,26,70,26,70,26,70,100,60,40
